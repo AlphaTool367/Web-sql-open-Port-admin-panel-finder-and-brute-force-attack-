@@ -2935,7 +2935,7 @@ def main():
             return
         
         print(f"{Fore.CYAN}🚀 Initializing Penetration Testing Framework...{Style.RESET_ALL}")
-        print(f"{Fore.YELLOW}📋 Version 2.0 - Advanced Web Application Security Scanner{Style.RESET_ALL}")
+        print(f"{Fore.YELLOW}📋 Version 3.0 - Advanced Web Application Security Scanner{Style.RESET_ALL}")
         print(f"{Fore.GREEN}🔧 Loading security databases...{Style.RESET_ALL}")
         
         # Initialize and run the tester
