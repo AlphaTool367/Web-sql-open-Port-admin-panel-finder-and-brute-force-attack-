@@ -452,8 +452,6 @@ class PenetrationTester:
         else:
             print(f"{Fore.RED}❌ SSL Certificate: INVALID{Style.RESET_ALL}")
         
-        # Notes removed per user request
-        
         confirm = input(f"\n{Fore.RED}❓ Do you have AUTHORIZATION to test {target}? (Y/N): {Style.RESET_ALL}").lower()
         if confirm != 'y':
             print(f"{Fore.RED}🚫 Testing cancelled.{Style.RESET_ALL}")
@@ -2605,7 +2603,7 @@ class PenetrationTester:
         payloads = []
         try:
             # Use both DB and generator if available
-            payloads.extend(self.learning_db.get('exploit_payloads', {}).get('sql', []))
+            payloads.extend(self.learning_db.get('exploit_payloads', {}).get('sql_injection', []))
         except Exception:
             pass
         try:
@@ -2952,6 +2950,3 @@ def main():
 # Run the tool
 if __name__ == "__main__":
     main()
-    
-    
-    
